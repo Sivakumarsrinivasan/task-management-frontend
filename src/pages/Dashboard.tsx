@@ -16,6 +16,7 @@ import Dialog from "../components/Dialog/Dialog";
 import { useCreateUserMutation, useDeleteUserMutation, useUpdateUserMutation } from "../Hooks/useMutationQuery";
 import { toast } from "sonner";
 import DeleteConfirmationDialog from "../components/Dialog/confirmationDialog";
+import MainLayout from "../layout/mainLayout";
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -111,231 +112,232 @@ const [dueDate, setDueDate] = useState("");
     setDueDate('');
   }
   return (
-    <div className="flex min-h-screen bg-app">
+    <>
 
       {/* Sidebar */}
 
-      <Sidebar
+      {/* <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-      />
+      /> */}
 
       {/* Right Section */}
+      <MainLayout>
 
-      <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col">
 
-        <Navbar onMenuClick={() => setSidebarOpen(true)} />
+          {/* <Navbar onMenuClick={() => setSidebarOpen(true)} /> */}
 
-        <main className="flex-1 p-8">
+          <main className="flex-1 p-8">
 
-          {/* Header */}
+            {/* Header */}
 
-          <div className="mb-8 flex items-center justify-between">
+            <div className="mb-8 flex items-center justify-between">
 
-            <div>
-              <h1 className="text-4xl font-bold text-main">
-                Dashboard
-              </h1>
+              <div>
+                <h1 className="text-4xl font-bold text-main">
+                  Dashboard
+                </h1>
 
-              <p className="mt-2 text-muted-custom">
-                Welcome back 👋 Here's an overview of your tasks.
-              </p>
-            </div>
+                <p className="mt-2 text-muted-custom">
+                  Welcome back 👋 Here's an overview of your tasks.
+                </p>
+              </div>
 
-            <button className="flex items-center gap-2 rounded-2xl bg-primary-custom px-5 py-3 text-white" onClick={() =>{setIsEdit(false); setIsDialogOpen(true)}}>
-              <Plus size={20} />
-              New Task
-            </button>
-
-          </div>
-
-          {/* Summary */}
-
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
-
-            <SummaryCard
-              title="Total Tasks"
-              value={taskList?.length ?? 0}
-              icon={ClipboardList}
-              color="text-indigo-600"
-              bgColor="bg-indigo-100"
-              increase="+12%"
-            />
-
-            <SummaryCard
-              title="Pending"
-              value={taskList?.filter((a)=>a.status == 'pending').length ?? 0}
-              icon={Clock3}
-              color="text-orange-500"
-              bgColor="bg-orange-100"
-              increase="+5%"
-            />
-
-            <SummaryCard
-              title="In Progress"
-              value={taskList?.filter((a)=>a.status == 'in_progress').length ?? 0}
-              icon={LoaderCircle}
-              color="text-blue-500"
-              bgColor="bg-blue-100"
-              increase="+3%"
-            />
-
-            <SummaryCard
-              title="Completed"
-              value={taskList?.filter((a)=>a.status == 'completed').length ?? 0}
-              icon={CircleCheckBig}
-              color="text-green-500"
-              bgColor="bg-green-100"
-              increase="+20%"
-            />
-
-          </div>
-
-          {/* Recent Tasks */}
-
-          <div className="mt-12">
-
-            <div className="mb-6 flex items-center justify-between">
-
-              <h2 className="text-2xl font-bold text-main">
-                Recent Tasks
-              </h2>
-
-              <button className="rounded-xl border border-custom bg-surface px-5 py-2 hover:bg-input-custom">
-                View All
+              <button className="flex items-center gap-2 rounded-2xl bg-primary-custom px-5 py-3 text-white" onClick={() => { setIsEdit(false); setIsDialogOpen(true) }}>
+                <Plus size={20} />
+                New Task
               </button>
 
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {/* Summary */}
 
-              {taskList.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onEdit={() => {setIsEdit(true); setIsDialogOpen(true); setUpdateTaskId(task?.id); setTaskName(task?.title); setDescription(task?.description); setStatus(task?.status)}}
-                  onDelete={() => {setUpdateTaskId(task?.id);setDeleteOpen(true)}}
-                />
-              ))}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+
+              <SummaryCard
+                title="Total Tasks"
+                value={taskList?.length ?? 0}
+                icon={ClipboardList}
+                color="text-indigo-600"
+                bgColor="bg-indigo-100"
+                increase="+12%"
+              />
+
+              <SummaryCard
+                title="Pending"
+                value={taskList?.filter((a) => a.status == 'pending').length ?? 0}
+                icon={Clock3}
+                color="text-orange-500"
+                bgColor="bg-orange-100"
+                increase="+5%"
+              />
+
+              <SummaryCard
+                title="In Progress"
+                value={taskList?.filter((a) => a.status == 'in_progress').length ?? 0}
+                icon={LoaderCircle}
+                color="text-blue-500"
+                bgColor="bg-blue-100"
+                increase="+3%"
+              />
+
+              <SummaryCard
+                title="Completed"
+                value={taskList?.filter((a) => a.status == 'completed').length ?? 0}
+                icon={CircleCheckBig}
+                color="text-green-500"
+                bgColor="bg-green-100"
+                increase="+20%"
+              />
 
             </div>
 
-          </div>
+            {/* Recent Tasks */}
 
-        </main>
-<Dialog
-  open={isDialogOpen}
-  title="Create New Task"
-  onClose={() => setIsDialogOpen(false)}
->
-  <div className="space-y-5">
+            <div className="mt-12">
 
-    <div>
-      <label className="mb-2 block text-sm text-muted-custom">
-        Title *
-      </label>
+              <div className="mb-6 flex items-center justify-between">
 
-      <input
-        type="text"
-        placeholder="Enter task title"
-        value={taskName}
-        onChange={(e)=>setTaskName(e.target.value)}
-        className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 text-main outline-none"
-      />
-    </div>
+                <h2 className="text-2xl font-bold text-main">
+                  Recent Tasks
+                </h2>
 
-    <div>
-      <label className="mb-2 block text-sm text-muted-custom">
-        Description
-      </label>
+                <button className="rounded-xl border border-custom bg-surface px-5 py-2 hover:bg-input-custom">
+                  View All
+                </button>
 
-      <textarea
-        rows={4}
-                onChange={(e)=>setDescription(e.target.value)}
-        value={description}
-        placeholder="Task description..."
-        className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 text-main outline-none"
-      />
-    </div>
-    <div>
-  <label className="mb-2 block text-sm text-muted-custom">
-    Status
-  </label>
+              </div>
 
-  <select
-    className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 text-main outline-none focus:border-primary-custom"
-    value={status}
-    onChange={(e)=>setStatus(e.target.value)}
-  >
-    <option value="pending">Pending</option>
-    <option value="in_progress">In Progress</option>
-    <option value="completed">Completed</option>
-  </select>
-  
-</div>
-<div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
-  {/* Start Date */}
+                {taskList.map((task) => (
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    onEdit={() => { setIsEdit(true); setIsDialogOpen(true); setUpdateTaskId(task?.id); setTaskName(task?.title); setDescription(task?.description); setStatus(task?.status) }}
+                    onDelete={() => { setUpdateTaskId(task?.id); setDeleteOpen(true) }}
+                  />
+                ))}
 
-  <div>
-    <label className="mb-2 block text-sm text-muted-custom">
-      Start Date & Time *
-    </label>
+              </div>
 
-    <input
-      type="datetime-local"
-      value={startDate}
-      onChange={(e) => setStartDate(e.target.value)}
-      className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 text-main outline-none focus:border-primary-custom"
-    />
-  </div>
+            </div>
 
-  {/* Due Date */}
+          </main>
+          <Dialog
+            open={isDialogOpen}
+            title="Create New Task"
+            onClose={() => setIsDialogOpen(false)}
+          >
+            <div className="space-y-5">
 
-  <div>
-    <label className="mb-2 block text-sm text-muted-custom">
-      Due Date & Time *
-    </label>
+              <div>
+                <label className="mb-2 block text-sm text-muted-custom">
+                  Title *
+                </label>
 
-    <input
-      type="datetime-local"
-      value={dueDate}
-      min={startDate}
-      onChange={(e) => setDueDate(e.target.value)}
-      className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 text-main outline-none focus:border-primary-custom"
-    />
-  </div>
+                <input
+                  type="text"
+                  placeholder="Enter task title"
+                  value={taskName}
+                  onChange={(e) => setTaskName(e.target.value)}
+                  className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 text-main outline-none"
+                />
+              </div>
 
-</div>
-    <div className="flex justify-end gap-3">
+              <div>
+                <label className="mb-2 block text-sm text-muted-custom">
+                  Description
+                </label>
 
-      <button
-        onClick={() => {setIsDialogOpen(false); resetValue();}}
-        className="rounded-xl border border-custom px-5 py-2 text-white cursor-pointer"
-      >
-        Cancel
-      </button>
+                <textarea
+                  rows={4}
+                  onChange={(e) => setDescription(e.target.value)}
+                  value={description}
+                  placeholder="Task description..."
+                  className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 text-main outline-none"
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm text-muted-custom">
+                  Status
+                </label>
 
-      <button
-        className="rounded-xl bg-primary-custom px-5 py-2 text-white cursor-pointer"
-        onClick={submitValue}
- >
-        {isEdit ? "Update" : "Create"} Task
-      </button>
+                <select
+                  className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 text-main outline-none focus:border-primary-custom"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                >
+                  <option value="pending">Pending</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="completed">Completed</option>
+                </select>
 
-    </div>
+              </div>
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
 
-  </div>
-</Dialog>
+                {/* Start Date */}
 
-     <DeleteConfirmationDialog
-        isOpen={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
-        onConfirm={handleDelete}
-      />
-      </div>
+                <div>
+                  <label className="mb-2 block text-sm text-muted-custom">
+                    Start Date & Time *
+                  </label>
 
-    </div>
+                  <input
+                    type="datetime-local"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 text-main outline-none focus:border-primary-custom"
+                  />
+                </div>
+
+                {/* Due Date */}
+
+                <div>
+                  <label className="mb-2 block text-sm text-muted-custom">
+                    Due Date & Time *
+                  </label>
+
+                  <input
+                    type="datetime-local"
+                    value={dueDate}
+                    min={startDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                    className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 text-main outline-none focus:border-primary-custom"
+                  />
+                </div>
+
+              </div>
+              <div className="flex justify-end gap-3">
+
+                <button
+                  onClick={() => { setIsDialogOpen(false); resetValue(); }}
+                  className="rounded-xl border border-custom px-5 py-2 text-white cursor-pointer"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="rounded-xl bg-primary-custom px-5 py-2 text-white cursor-pointer"
+                  onClick={submitValue}
+                >
+                  {isEdit ? "Update" : "Create"} Task
+                </button>
+
+              </div>
+
+            </div>
+          </Dialog>
+
+          <DeleteConfirmationDialog
+            isOpen={deleteOpen}
+            onClose={() => setDeleteOpen(false)}
+            onConfirm={handleDelete}
+          />
+        </div>
+      </MainLayout>
+    </>
   );
 };
 

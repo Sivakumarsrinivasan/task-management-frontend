@@ -1,8 +1,8 @@
 import apiInterceptor from "./apiInterceptor";
 
 const task = import.meta.env.VITE_TASK_URL
-export const getTaskService = async() =>{
-const user = await apiInterceptor.get(`${task}/get-tasks`);
+export const getTaskService = async(page, limit, search, status, sort, order) =>{
+const user = await apiInterceptor.get(`${task}/get-tasks?page=${page}&limit=${limit}&search=${search}&sort=${sort}&order=${order}&status=${status}`);
 return user.data
 }
 export const createTaskService = async(data) =>{

@@ -10,6 +10,7 @@ import { Toaster } from 'sonner'
 function App() {
   const [count, setCount] = useState(0)
  const Dashboard = lazy(()=>import('../src/pages/Dashboard'));
+ const Task = lazy(()=>import('../src/pages/Task'));
  const query = new QueryClient();
   return (
     <>
@@ -22,6 +23,7 @@ function App() {
       <Route path='' element={<Register/>}/>
       <Route element={<Protectedroute/>}>
       <Route path='/dashboard' element={<Dashboard/>}/>
+      <Route path='/tasks' element={<Task/>}/>
       </Route>
     </Routes>
     </Suspense>
