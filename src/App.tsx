@@ -6,6 +6,7 @@ import { Protectedroute } from './routes/protectedroute'
 import PageLoader from './components/pageLoader'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
+import NotFound from './pages/notFoundPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -24,6 +25,7 @@ function App() {
       <Route element={<Protectedroute/>}>
       <Route path='/dashboard' element={<Dashboard/>}/>
       <Route path='/tasks' element={<Task/>}/>
+      <Route path='*' element={<NotFound/>}/>
       </Route>
     </Routes>
     </Suspense>
