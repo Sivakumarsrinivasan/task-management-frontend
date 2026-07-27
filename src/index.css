@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  /* Core Backgrounds & Surfaces */
+  --bg-app: #f8fafc;        /* Slate 50 - Main background */
+  --bg-surface: #ffffff;    /* Pure White - Cards & Modals */
+  --bg-input: #f1f5f9;      /* Slate 100 - Inputs & Fields */
+
+  /* Text Colors */
+  --text-main: #0f172a;     /* Slate 900 - Headings & High contrast text */
+  --text-muted: #64748b;    /* Slate 500 - Subtitles & Hints */
+
+  /* Brand / Primary Accent */
+  --primary: #4f46e5;       /* Indigo 600 - Main Brand Color */
+  --primary-hover: #4338ca; /* Indigo 700 - Hover State */
+  --primary-light: #e0e7ff; /* Indigo 100 - Subtle highlights */
+
+  /* Structural Borders */
+  --border-color: #e2e8f0;  /* Slate 200 - Borders & Dividers */
+
+  /* Task Status Colors (For global app consistency) */
+  --status-pending-bg: #fef3c7;
+  --status-pending-text: #92400e;
+  
+  --status-progress-bg: #dbeafe;
+  --status-progress-text: #1e40af;
+  
+  --status-completed-bg: #d1fae5;
+  --status-completed-text: #065f46;
+}
+
+.dark {
+  --bg-app: #0f172a;          /* Slate 900 */
+  --bg-surface: #1e293b;      /* Slate 800 */
+  --bg-input: #334155;        /* Slate 700 */
+
+  --text-main: #f8fafc;       /* Slate 50 */
+  --text-muted: #94a3b8;      /* Slate 400 */
+
+  --primary: #6366f1;         /* Indigo 500 */
+  --primary-hover: #4f46e5;   /* Indigo 600 */
+  --primary-light: #312e81;   /* Indigo 900 */
+
+  --border-color: #334155;    /* Slate 700 */
+}
+
+/* Custom CSS Variable Utility Classes */
+.bg-app { background-color: var(--bg-app); }
+.bg-surface { background-color: var(--bg-surface); }
+.bg-input-custom { background-color: var(--bg-input); }
+
+.text-main { color: var(--text-main); }
+.text-muted-custom { color: var(--text-muted); }
+
+.bg-primary-custom { background-color: var(--primary); }
+.bg-primary-hover:hover { background-color: var(--primary-hover); }
+.text-primary-custom { color: var(--primary); }
+
+.border-custom { border-color: var(--border-color); }
