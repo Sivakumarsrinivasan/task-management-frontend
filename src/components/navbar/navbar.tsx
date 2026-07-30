@@ -1,6 +1,7 @@
 import { Bell, LogOut, Menu, Moon, Search, Sun, User } from "lucide-react";
 import { useTheme } from "../../Hooks/theme";
 import { useUserDetail } from "../../Hooks/userDetail";
+import { useEffect } from "react";
 
 interface NavbarProps {
   onMenuClick?: () => void;
@@ -11,6 +12,19 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
   const setTheme = useTheme((state) => state.setTheme);
 
   const user = useUserDetail((state) => state);
+
+  useEffect(()=>{
+initialRenderTheme();
+  },[])
+
+  const initialRenderTheme = () =>{
+    const root = document.documentElement;
+    if(theme == "dark"){
+     root.classList.add("dark")
+    }else{
+root.classList.remove("dark")
+    }
+  }
 
   const toggleTheme = () => {
     const root = document.documentElement;

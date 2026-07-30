@@ -90,7 +90,7 @@ const [dueDate, setDueDate] = useState("");
       setUpdateTaskId("");
 
     } else {
-      await createMutate({ title: taskName, description, status })
+      await createMutate({ title: taskName, description, status,start_date:startDate,due_date:dueDate  })
             toast.success("Task created successfully");
 
 

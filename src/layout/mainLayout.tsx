@@ -10,7 +10,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-app">
+    <div className="flex h-screen overflow-hidden bg-app">
 
       <Sidebar
         open={sidebarOpen}
@@ -23,7 +23,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
           onMenuClick={() => setSidebarOpen((prev)=>!prev)}
         />
 
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-8 overflow-y-auto">
           {children}
         </main>
 

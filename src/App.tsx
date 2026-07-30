@@ -12,6 +12,7 @@ function App() {
   const [count, setCount] = useState(0)
  const Dashboard = lazy(()=>import('../src/pages/Dashboard'));
  const Task = lazy(()=>import('../src/pages/Task'));
+ const Profile = lazy(()=>import('../src/pages/profile'));
  const query = new QueryClient();
   return (
     <>
@@ -25,6 +26,7 @@ function App() {
       <Route element={<Protectedroute/>}>
       <Route path='/dashboard' element={<Dashboard/>}/>
       <Route path='/tasks' element={<Task/>}/>
+      <Route path='/profile' element={<Profile/>}/>
       <Route path='*' element={<NotFound/>}/>
       </Route>
     </Routes>

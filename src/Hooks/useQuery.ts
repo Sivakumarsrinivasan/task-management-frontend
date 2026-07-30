@@ -13,5 +13,6 @@ export const useTaskQuery = (
     queryKey: ["task", page, limit, search, status, sort, order],
     queryFn: () =>
       getTaskService(page, limit, search, status, sort, order),
+    staleTime:10*60*1000
   });
 };

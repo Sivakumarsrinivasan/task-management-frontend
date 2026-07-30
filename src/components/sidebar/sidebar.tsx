@@ -34,11 +34,7 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
       icon: User,
       path: "/profile",
     },
-    {
-      name: "Settings",
-      icon: Settings,
-      path: "/settings",
-    },
+
   ];
 
   return (

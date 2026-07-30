@@ -1,5 +1,7 @@
+import axios from "axios";
 import api from "./api"
 import apiInterceptor from "./apiInterceptor";
+import formDataApi from "./multiPartFormData";
 
 const auth = import.meta.env.VITE_AUTH_URL
 export const loginService = async(data) =>{
@@ -12,4 +14,9 @@ await api.post(`${auth}/register`,data)
 export const getProfileService = async() =>{
 const user = await apiInterceptor.get(`${auth}/me`);
 return user.data
+}
+
+export const updateProfileService = async (formData) => {
+    await formDataApi.put(`${auth}/update-profile`, formData);
+
 }

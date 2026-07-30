@@ -17,6 +17,7 @@ import { useCreateUserMutation, useDeleteUserMutation, useUpdateUserMutation } f
 import { toast } from "sonner";
 import DeleteConfirmationDialog from "../components/Dialog/confirmationDialog";
 import MainLayout from "../layout/mainLayout";
+import { TaskCardSkeleton } from "../components/skeletonCard";
 
 const Task = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -41,7 +42,7 @@ const [filterStatus, setFilterStatus] = useState("");
 
 const [sortBy, setSortBy] = useState("createdAt");
 const [sortOrder, setSortOrder] = useState("desc");
-const { data:userData, isLoading } = useTaskQuery(
+const { data:userData, isLoading,isFetching } = useTaskQuery(
   0,
   10,
   search,
@@ -81,7 +82,7 @@ return () =>clearTimeout(timer)
       setUpdateTaskId("");
 
     } else {
-      await createMutate({ title: taskName, description, status })
+      await createMutate({ title: taskName, description, status,start_date:startDate,due_date:dueDate })
             toast.success("Task created successfully");
 
 
@@ -197,6 +198,13 @@ return () =>clearTimeout(timer)
   </select>
 
 </div>
+              {isLoading || isFetching ? (
+  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+    {[1, 2, 3, 4, 5, 6].map((item) => (
+      <TaskCardSkeleton key={item} />
+    ))}
+  </div>
+)  :taskList.length>0 ?
               <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
                 {taskList.map((task) => (
@@ -208,7 +216,7 @@ return () =>clearTimeout(timer)
                   />
                 ))}
 
-              </div>
+              </div> : <EmptyTask/>}
 
             </div>
 
@@ -328,5 +336,18 @@ return () =>clearTimeout(timer)
     </>
   );
 };
+
+export const EmptyTask = () =>{
+  return(
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+    <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200">
+      No Data Found
+    </h2>
+    <p className="mt-2 text-gray-500 dark:text-gray-400">
+      There are no tasks to display.
+    </p>
+  </div>
+  )
+}
 
 export default Task;
