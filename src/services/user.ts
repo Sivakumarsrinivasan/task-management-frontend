@@ -20,3 +20,7 @@ export const updateProfileService = async (formData) => {
     await formDataApi.put(`${auth}/update-profile`, formData);
 
 }
+export async function googleLoginService(data) {
+    const response = await api.post(`${auth}/google-login`, data);
+    return response.data;
+}

@@ -6,7 +6,7 @@ import {
   LogOut,
   X,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { useUserDetail } from "../../Hooks/userDetail";
 
@@ -17,7 +17,8 @@ interface SidebarProps {
 
 const Sidebar = ({ open, onClose }: SidebarProps) => {
   const user = useUserDetail((state) => state);
-
+  const logOutUser = useUserDetail((state)=>state.logout);
+  const navigate = useNavigate();
   const menus = [
     {
       name: "Dashboard",
@@ -36,7 +37,10 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
     },
 
   ];
-
+  const logout = () => {
+    logOutUser();
+    navigate('/');
+  };
   return (
     <>
       {/* Mobile Overlay */}
@@ -140,6 +144,7 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
 
           <button
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 py-3 font-medium transition hover:bg-red-500"
+           onClick={logout}
           >
             <LogOut size={18} />
 

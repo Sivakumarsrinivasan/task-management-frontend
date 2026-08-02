@@ -7,6 +7,7 @@ import PageLoader from './components/pageLoader'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import NotFound from './pages/notFoundPage'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -16,6 +17,7 @@ function App() {
  const query = new QueryClient();
   return (
     <>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
           <Toaster richColors position="top-right" />
 
     <BrowserRouter>
@@ -33,6 +35,7 @@ function App() {
     </Suspense>
     </QueryClientProvider>
     </BrowserRouter>
+    </GoogleOAuthProvider>
     </>
   )
 }

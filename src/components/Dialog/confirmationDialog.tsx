@@ -5,6 +5,8 @@ interface DeleteConfirmationDialogProps {
   title?: string;
   message?: string;
   loading?: boolean;
+  buttonTitle?:string;
+  buttonLoading?:string;
   onClose: () => void;
   onConfirm: () => void;
 }
@@ -14,6 +16,8 @@ const DeleteConfirmationDialog = ({
   title = "Delete Task",
   message = "Are you sure you want to delete this task? This action cannot be undone.",
   loading = false,
+  buttonTitle = "Delete",
+  buttonLoading = "...Deleting",
   onClose,
   onConfirm,
 }: DeleteConfirmationDialogProps) => {
@@ -74,7 +78,7 @@ const DeleteConfirmationDialog = ({
           >
             <Trash2 size={18} />
 
-            {loading ? "Deleting..." : "Delete"}
+            {loading ? buttonLoading : buttonTitle}
           </button>
 
         </div>

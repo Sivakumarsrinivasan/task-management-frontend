@@ -10,5 +10,12 @@ export  const useUserDetail = create(persist((set)=>({
             id:action.id,
             token:action.token
         }
-    }))
+    })),
+
+    logOut:()=>set({
+        detail:{
+            id:'',
+            token:''
+        }
+    })
 }),{name:'userDetail'}))

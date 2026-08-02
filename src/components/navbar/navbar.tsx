@@ -1,7 +1,9 @@
 import { Bell, LogOut, Menu, Moon, Search, Sun, User } from "lucide-react";
 import { useTheme } from "../../Hooks/theme";
 import { useUserDetail } from "../../Hooks/userDetail";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import DeleteConfirmationDialog from "../Dialog/confirmationDialog";
 
 interface NavbarProps {
   onMenuClick?: () => void;
@@ -10,8 +12,10 @@ interface NavbarProps {
 const Navbar = ({ onMenuClick }: NavbarProps) => {
   const theme = useTheme((state) => state.theme);
   const setTheme = useTheme((state) => state.setTheme);
-
+ const [open, setOpen] = useState(false);
   const user = useUserDetail((state) => state);
+  const logOutUser = useUserDetail((state) => state.logOut);
+  const navigate = useNavigate();
 
   useEffect(()=>{
 initialRenderTheme();
@@ -39,8 +43,8 @@ root.classList.remove("dark")
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/";
+    logOutUser();
+    navigate('/');
   };
 
   return (
@@ -147,7 +151,7 @@ root.classList.remove("dark")
           {/* Logout */}
 
           <button
-            onClick={logout}
+            onClick={()=>{setOpen(true)}}
             className="flex items-center gap-2 rounded-xl bg-primary-custom hover:bg-primary-hover px-4 py-2 text-white transition"
           >
 
@@ -162,7 +166,15 @@ root.classList.remove("dark")
         </div>
 
       </div>
-
+  <DeleteConfirmationDialog
+            isOpen={open}
+            onClose={() => setOpen(false)}
+            title="Logout confirmation"
+            message="Are you sure you want to Log out"
+            onConfirm={logout}
+            buttonTitle="Logout"
+            buttonLoading="wait..."
+          />
     </header>
   );
 };

@@ -91,7 +91,6 @@ const [dueDate, setDueDate] = useState("");
 
     } else {
       await createMutate({ title: taskName, description, status,start_date:startDate,due_date:dueDate  })
-            toast.success("Task created successfully");
 
 
     }
