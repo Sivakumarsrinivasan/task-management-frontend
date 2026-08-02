@@ -18,11 +18,11 @@ import { useUserCustomHooks } from "../Hooks/useUserCustomHooks";
 import { exportCsvService, importCsv } from "../services/tasks";
 
 const Task = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [taskList, setTaskList] = useState([]);
- 
-
-
+  const [page,setPage] = useState(1);
+  const [currentpage,setCurrentPage] = useState(0);
+  const [totalPage,setTotalPage] = useState(0);
+  const [nextPageBool, setNextPageBool] =useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [description, setDescription] = useState("");
   const [taskName, setTaskName] = useState("");
@@ -42,8 +42,8 @@ const [sortOrder, setSortOrder] = useState("desc");
 
 const { data:userData, isLoading,isFetching } = useTaskQuery(
   userDetail?.id ?? "",
-  0,
-  10,
+  page,
+  6,
   search,
   filterStatus,
   sortBy,
@@ -65,7 +65,15 @@ return () =>clearTimeout(timer)
   useEffect(() => {
     if (userData) {
       console.log(userData)
-      setTaskList(userData.data.row)
+      if (nextPageBool) {
+        setTaskList((prev) => [...prev, ...userData.data.row].filter((item, index, self) => index === self.findIndex((a) => a.id === item.id)))
+
+      } else {
+        setTaskList(userData.data.row)
+      }
+      setNextPageBool(false)
+      setCurrentPage(userData.data.paginationDetail.currentPage);
+      setTotalPage(userData.data.paginationDetail.totalPage);
 
     }
   }, [userData])
@@ -158,6 +166,26 @@ link.click();
 document.body.appendChild(link);
  window.URL.revokeObjectURL(url);
 }
+const preFillValue = (task) =>{
+setUpdateTaskId(task?.id); 
+setTaskName(task?.title); 
+setDescription(task?.description); 
+setStatus(task?.status);
+setStartDate(task?.start_date.slice(0,16)); 
+setDueDate(task?.due_date.slice(0,16))
+}
+const clearValue = () =>{
+setUpdateTaskId(""); 
+setTaskName(""); 
+setDescription(""); 
+setStatus("pending");
+setStartDate(""); 
+setDueDate("")
+}
+const nextPage = () =>{
+setPage((prev)=>prev+1);
+setNextPageBool(true)
+}
 
   return (
     <>
@@ -172,11 +200,11 @@ document.body.appendChild(link);
       {/* Right Section */}
       <MainLayout>
 
-        <div className="flex flex-1 flex-col">
+        <div className="h-full flex flex-1 flex-col">
 
           {/* <Navbar onMenuClick={() => setSidebarOpen(true)} /> */}
 
-          <main className="flex-1 p-8">
+          <main className="flex-1 h-full p-8">
 
             {/* Header */}
 
@@ -188,7 +216,7 @@ document.body.appendChild(link);
                 </h1>
               </div>
 
-              <button className="flex items-center gap-2 rounded-2xl bg-primary-custom px-5 py-3 text-white" onClick={() => { setIsEdit(false); setIsDialogOpen(true) }}>
+              <button className="flex items-center gap-2 rounded-2xl bg-primary-custom px-5 py-3 text-white" onClick={() => { setIsEdit(false); setIsDialogOpen(true); clearValue()}}>
                 <Plus size={20} />
                 New Task
               </button>
@@ -201,7 +229,7 @@ document.body.appendChild(link);
 
             {/* Recent Tasks */}
 
-            <div className="mt-12">
+            <div className="mt-12 h-full">
 <div className="mb-8 flex flex-wrap justify-between">
 
   {/* Search */}
@@ -263,16 +291,18 @@ document.body.appendChild(link);
                   ))}
                 </div>
               ) : taskList.length > 0 ?
-                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                <div className="grid h-[85%] pb-[10%] overflow-auto gap-6 md:grid-cols-2 xl:grid-cols-3">
 
                   {taskList.map((task) => (
                     <TaskCard
                       key={task.id}
                       task={task}
-                      onEdit={() => { setIsEdit(true); setIsDialogOpen(true); setUpdateTaskId(task?.id); setTaskName(task?.title); setDescription(task?.description); setStatus(task?.status) }}
+                      onEdit={() => { setIsEdit(true); setIsDialogOpen(true); preFillValue(task) }}
                       onDelete={() => { setUpdateTaskId(task?.id); setDeleteOpen(true) }}
                     />
                   ))}
+                    {currentpage < totalPage &&
+                      <LoadMoreButton nextPage={nextPage} />}
 
                 </div> : <EmptyTask />}
 
@@ -394,6 +424,27 @@ document.body.appendChild(link);
     </>
   );
 };
+
+export const LoadMoreButton = ({nextPage}:{nextPage:()=>void}) => {
+  return (
+    <>
+      <div className="mt-6 flex justify-center">
+
+      </div>
+      <div className="mt-6 w-full flex justify-center">
+        <button
+          onClick={nextPage}
+          className="rounded-lg bg-blue-600 px-5 py-2 text-white w-[50%] cursor-pointer hover:bg-blue-700"
+        >
+          Load More
+        </button>
+      </div>
+      <div>
+
+      </div>
+    </>
+  )
+}
 
 export const EmptyTask = () =>{
   return(

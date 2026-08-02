@@ -23,7 +23,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
           onMenuClick={() => setSidebarOpen((prev)=>!prev)}
         />
 
-        <main className="flex-1 p-8 overflow-y-auto">
+        <main className="flex-1 p-8 h-full">
           {children}
         </main>
 

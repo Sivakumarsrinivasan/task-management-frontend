@@ -26,7 +26,7 @@ const Dashboard = () => {
   const {data:userData, isLoading,
   isPending,
   isError,
-  error,} = useTaskQuery(userDetail?.id ?? "");
+  error,} = useTaskQuery(userDetail?.id ?? "",0,3);
 console.log({
   userData,
   isLoading,
@@ -46,29 +46,7 @@ const {mutate:deleteMutate} = useDeleteUserMutation(userDetail?.id ?? "");
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [startDate, setStartDate] = useState("");
 const [dueDate, setDueDate] = useState("");
-  const tasks: Task[] = [
-    {
-      id: 1,
-      title: "Design Login Page",
-      description: "Create responsive login page.",
-      status: "completed",
-      createdAt: "25 Jul 2026",
-    },
-    {
-      id: 2,
-      title: "JWT Authentication",
-      description: "Complete login and register.",
-      status: "in_progress",
-      createdAt: "24 Jul 2026",
-    },
-    {
-      id: 3,
-      title: "Dashboard UI",
-      description: "Create dashboard components.",
-      status: "pending",
-      createdAt: "23 Jul 2026",
-    },
-  ];
+
   useEffect(() => {
     if (userData) {
       console.log(userData)
