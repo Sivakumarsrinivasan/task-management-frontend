@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Camera } from "lucide-react";
 import MainLayout from "../layout/mainLayout";
-import { getProfileService, updateProfileService } from "../services/user";
-import { useUserCustomHooks } from "../Hooks/useUserCustomHooks";
+import { updateProfileService } from "../services/user";
 import { userProfileDetail } from "../Hooks/userProfileDetail";
 
 const Profile = () => {
