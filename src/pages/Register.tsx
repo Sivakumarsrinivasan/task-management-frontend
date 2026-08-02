@@ -51,9 +51,7 @@ export default function Register() {
     }
   };
 
-  const handleGoogleSignIn = () => {
-    console.log('Triggering Google OAuth...');
-  };
+
 
   return (
     <div className="min-h-screen bg-app flex items-center justify-center p-4 md:p-8 font-sans transition-colors duration-300">

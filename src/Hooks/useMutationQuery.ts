@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createTaskService, deleteTaskService, updateTaskService } from "../services/tasks"
+import { createTaskService, deleteTaskService, importCsv, updateTaskService } from "../services/tasks"
 import { toast } from "sonner"
 
 
-export const useCreateUserMutation = () =>{
+export const useCreateUserMutation = (userId) =>{
     const query = useQueryClient()
     return useMutation({
         mutationFn:async (data:any) => await createTaskService(data),
@@ -11,7 +11,7 @@ export const useCreateUserMutation = () =>{
             toast.success("Task created successfully successfully");
 
             query.invalidateQueries({
-                queryKey: ['task']
+                queryKey: [userId,'task']
             })
         },
         onError:(error)=>{
@@ -21,7 +21,25 @@ export const useCreateUserMutation = () =>{
         }
     })
 }
-export const useUpdateUserMutation = () =>{
+export const useImportUserMutation = (userId) =>{
+    const query = useQueryClient()
+    return useMutation({
+        mutationFn:async (data:any) => await importCsv(userId,data),
+        onSuccess: () => {
+            toast.success("Task created successfully successfully");
+
+            query.invalidateQueries({
+                queryKey: [userId,'task']
+            })
+        },
+        onError:(error)=>{
+              toast.error(
+        error?.response?.data?.message || "Failed to create task"
+      );
+        }
+    })
+}
+export const useUpdateUserMutation = (userId:string) =>{
     const query = useQueryClient()
     return useMutation({
         mutationFn:async (data:any) =>await updateTaskService(data),
@@ -29,7 +47,7 @@ export const useUpdateUserMutation = () =>{
                   toast.success("Task updated successfully");
 
 query.invalidateQueries({
-    queryKey:['task']
+    queryKey:[userId,'task']
 })
         },
         onError:(error)=>{
@@ -39,7 +57,7 @@ query.invalidateQueries({
         }
     })
 }
-export const useDeleteUserMutation = () =>{
+export const useDeleteUserMutation = (userId:string) =>{
     const query = useQueryClient()
     return useMutation({
         mutationFn:(id) => deleteTaskService(id),
@@ -47,7 +65,7 @@ export const useDeleteUserMutation = () =>{
                 toast.success("Task Deleted successfully");
 
 query.invalidateQueries({
-    queryKey:['task']
+    queryKey:[userId,'task']
 })
         },
         onError:(error)=>{

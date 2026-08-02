@@ -1,32 +1,28 @@
 import { useEffect, useState } from "react";
 import {
-  ClipboardList,
-  Clock3,
-  LoaderCircle,
-  CircleCheckBig,
   Plus,
 } from "lucide-react";
 
-import Navbar from "../components/navbar/navbar";
-import Sidebar from "../components/sidebar/sidebar";
-import SummaryCard from "../components/task/summarycard";
+import Papa, { type ParseResult } from "papaparse";
 import TaskCard, { type Task } from "../components/task/taskcard";
 import { useTaskQuery } from "../Hooks/useQuery";
 import Dialog from "../components/Dialog/Dialog";
-import { useCreateUserMutation, useDeleteUserMutation, useUpdateUserMutation } from "../Hooks/useMutationQuery";
+import { useCreateUserMutation, useDeleteUserMutation, useImportUserMutation, useUpdateUserMutation } from "../Hooks/useMutationQuery";
 import { toast } from "sonner";
 import DeleteConfirmationDialog from "../components/Dialog/confirmationDialog";
 import MainLayout from "../layout/mainLayout";
 import { TaskCardSkeleton } from "../components/skeletonCard";
+import { useUserDetail } from "../Hooks/userDetail";
+import ImportButtonExportButton from "../components/Buttons/ExportButton";
+import { useUserCustomHooks } from "../Hooks/useUserCustomHooks";
+import { exportCsvService, importCsv } from "../services/tasks";
 
 const Task = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [taskList, setTaskList] = useState([]);
  
 
-const {mutate:createMutate} = useCreateUserMutation();
-const {mutate:updateMutate} = useUpdateUserMutation();
-const {mutate:deleteMutate} = useDeleteUserMutation();
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [description, setDescription] = useState("");
   const [taskName, setTaskName] = useState("");
@@ -42,7 +38,10 @@ const [filterStatus, setFilterStatus] = useState("");
 
 const [sortBy, setSortBy] = useState("createdAt");
 const [sortOrder, setSortOrder] = useState("desc");
+  const userDetail = useUserDetail((detail)=>detail.detail)
+
 const { data:userData, isLoading,isFetching } = useTaskQuery(
+  userDetail?.id ?? "",
   0,
   10,
   search,
@@ -50,7 +49,11 @@ const { data:userData, isLoading,isFetching } = useTaskQuery(
   sortBy,
   sortOrder
 );
-
+const {mutate:createMutate} = useCreateUserMutation(userDetail?.id ?? "");
+const {mutate:updateMutate} = useUpdateUserMutation(userDetail?.id ?? "");
+const {mutate:deleteMutate} = useDeleteUserMutation(userDetail?.id ?? "");
+const {mutate:importCsvMutate} = useImportUserMutation(userDetail?.id ?? "");
+const {errorValidator} = useUserCustomHooks()
 useEffect(()=>{
 const timer = setTimeout(() => {
     setSearch(searchinput)
@@ -102,6 +105,59 @@ return () =>clearTimeout(timer)
     setStartDate('');
     setDueDate('');
   }
+const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+
+  if (!file) return;
+
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: (results: ParseResult<Record<string, string>>) => {
+      console.log(results.data);
+      let error = errorValidator(results.data);
+      if (error.length > 0) {
+        console.log('error', error)
+        let columnName = '';
+        let fileldName = '';
+        if (error.length == 1) {
+          columnName = error[0].title;
+          fileldName = error[0].columnName;
+
+        } else {
+          error.forEach((a) => {
+            columnName = a.title + ',' + columnName;
+            fileldName += a.columnName + ',' + fileldName;
+          })
+        }
+
+        toast.error(`Please check you task "${columnName}" there is an invalid field in "${fileldName}"`);
+        return
+      }
+      importCsvMutate(results.data)
+    },
+    error: (error) => {
+      console.error(error);
+    },
+  });
+
+  // Optional: reset the input so the same file can be selected again
+  event.target.value = "";
+};
+const exportCsv = async() =>{
+const task = await exportCsvService(userDetail?.id);
+const csv = Papa.unparse(task);
+const blob = new Blob([csv],{
+  type:'text/csv;charset=utf-8;'
+})
+const url = window.URL.createObjectURL(blob);
+const link = document.createElement('a');
+link.href =url;
+link.download ='task.csv';
+link.click();
+document.body.appendChild(link);
+ window.URL.revokeObjectURL(url);
+}
 
   return (
     <>
@@ -146,9 +202,10 @@ return () =>clearTimeout(timer)
             {/* Recent Tasks */}
 
             <div className="mt-12">
-<div className="mb-8 flex flex-wrap items-center gap-4">
+<div className="mb-8 flex flex-wrap justify-between">
 
   {/* Search */}
+  <div className="flex gap-4">
 
   <input
     type="text"
@@ -195,27 +252,29 @@ return () =>clearTimeout(timer)
     <option value="desc">Descending</option>
     <option value="asc">Ascending</option>
   </select>
+</div>
+  <ImportButtonExportButton handleFile={handleFile} exportCsv={exportCsv}/>
 
 </div>
               {isLoading || isFetching ? (
-  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-    {[1, 2, 3, 4, 5, 6].map((item) => (
-      <TaskCardSkeleton key={item} />
-    ))}
-  </div>
-)  :taskList.length>0 ?
-              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                  {[1, 2, 3, 4, 5, 6].map((item) => (
+                    <TaskCardSkeleton key={item} />
+                  ))}
+                </div>
+              ) : taskList.length > 0 ?
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
-                {taskList.map((task) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                    onEdit={() => { setIsEdit(true); setIsDialogOpen(true); setUpdateTaskId(task?.id); setTaskName(task?.title); setDescription(task?.description); setStatus(task?.status) }}
-                    onDelete={() => { setUpdateTaskId(task?.id); setDeleteOpen(true) }}
-                  />
-                ))}
+                  {taskList.map((task) => (
+                    <TaskCard
+                      key={task.id}
+                      task={task}
+                      onEdit={() => { setIsEdit(true); setIsDialogOpen(true); setUpdateTaskId(task?.id); setTaskName(task?.title); setDescription(task?.description); setStatus(task?.status) }}
+                      onDelete={() => { setUpdateTaskId(task?.id); setDeleteOpen(true) }}
+                    />
+                  ))}
 
-              </div> : <EmptyTask/>}
+                </div> : <EmptyTask />}
 
             </div>
 

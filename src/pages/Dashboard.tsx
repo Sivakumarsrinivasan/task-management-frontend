@@ -17,14 +17,16 @@ import { useCreateUserMutation, useDeleteUserMutation, useUpdateUserMutation } f
 import { toast } from "sonner";
 import DeleteConfirmationDialog from "../components/Dialog/confirmationDialog";
 import MainLayout from "../layout/mainLayout";
+import { useUserDetail } from "../Hooks/userDetail";
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [taskList, setTaskList] = useState([]);
+  const userDetail = useUserDetail((detail)=>detail.detail)
   const {data:userData, isLoading,
   isPending,
   isError,
-  error,} = useTaskQuery();
+  error,} = useTaskQuery(userDetail?.id ?? "");
 console.log({
   userData,
   isLoading,
@@ -32,9 +34,9 @@ console.log({
   isError,
   error,
 });  
-const {mutate:createMutate} = useCreateUserMutation();
-const {mutate:updateMutate} = useUpdateUserMutation();
-const {mutate:deleteMutate} = useDeleteUserMutation();
+const {mutate:createMutate} = useCreateUserMutation(userDetail?.id ?? "");
+const {mutate:updateMutate} = useUpdateUserMutation(userDetail?.id ?? "");
+const {mutate:deleteMutate} = useDeleteUserMutation(userDetail?.id ?? "");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [description, setDescription] = useState("");
   const [taskName, setTaskName] = useState("");

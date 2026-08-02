@@ -18,4 +18,11 @@ export const deleteTaskService = async(id) =>{
 const user = await apiInterceptor.delete(`${task}/delete-tasks/${id}`);
 return user.data
 }
+export const importCsv = async(id,data) =>{
+    const user = await apiInterceptor.post(`${task}/import-csv`,data);
+}
+export const exportCsvService = async(id) =>{
+    const user = await apiInterceptor.get(`${task}/export-csv`);
+    return  user.data.data
+}
 
