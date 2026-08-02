@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense } from 'react'
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Register from './pages/Register'
@@ -10,7 +10,6 @@ import NotFound from './pages/notFoundPage'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 
 function App() {
-  const [count, setCount] = useState(0)
  const Dashboard = lazy(()=>import('../src/pages/Dashboard'));
  const Task = lazy(()=>import('../src/pages/Task'));
  const Profile = lazy(()=>import('../src/pages/profile'));

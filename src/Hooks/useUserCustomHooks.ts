@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export function useUserCustomHooks(){
 
-    const errorValidator = (arr) =>{
+    const errorValidator = (arr:any[]) =>{
       let error = [];
       let errorDetail = {title:'', columnName:''}
       for(let i = 0; i<arr.length;i++){

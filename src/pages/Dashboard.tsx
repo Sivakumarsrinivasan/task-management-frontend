@@ -6,11 +6,8 @@ import {
   CircleCheckBig,
   Plus,
 } from "lucide-react";
-
-import Navbar from "../components/navbar/navbar";
-import Sidebar from "../components/sidebar/sidebar";
 import SummaryCard from "../components/task/summarycard";
-import TaskCard, { type Task } from "../components/task/taskcard";
+import TaskCard from "../components/task/taskcard";
 import { useTaskQuery } from "../Hooks/useQuery";
 import Dialog from "../components/Dialog/Dialog";
 import { useCreateUserMutation, useDeleteUserMutation, useUpdateUserMutation } from "../Hooks/useMutationQuery";
@@ -20,8 +17,7 @@ import MainLayout from "../layout/mainLayout";
 import { useUserDetail } from "../Hooks/userDetail";
 
 const Dashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [taskList, setTaskList] = useState([]);
+  const [taskList, setTaskList] = useState<any[]>([]);
   const userDetail = useUserDetail((detail)=>detail.detail)
   const {data:userData, isLoading,
   isPending,
@@ -90,6 +86,14 @@ const [dueDate, setDueDate] = useState("");
     setStartDate('');
     setDueDate('');
   }
+  const preFillValue = (task:any) =>{
+setUpdateTaskId(task?.id); 
+setTaskName(task?.title); 
+setDescription(task?.description); 
+setStatus(task?.status);
+setStartDate(task?.start_date.slice(0,16)); 
+setDueDate(task?.due_date.slice(0,16))
+}
   return (
     <>
 
@@ -182,9 +186,7 @@ const [dueDate, setDueDate] = useState("");
                   Recent Tasks
                 </h2>
 
-                <button className="rounded-xl border border-custom bg-surface px-5 py-2 hover:bg-input-custom">
-                  View All
-                </button>
+          
 
               </div>
 
@@ -194,7 +196,7 @@ const [dueDate, setDueDate] = useState("");
                   <TaskCard
                     key={task.id}
                     task={task}
-                    onEdit={() => { setIsEdit(true); setIsDialogOpen(true); setUpdateTaskId(task?.id); setTaskName(task?.title); setDescription(task?.description); setStatus(task?.status) }}
+                    onEdit={() => { setIsEdit(true); setIsDialogOpen(true); preFillValue(task)}}
                     onDelete={() => { setUpdateTaskId(task?.id); setDeleteOpen(true) }}
                   />
                 ))}

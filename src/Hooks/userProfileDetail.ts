@@ -1,8 +1,11 @@
 import { create } from "zustand";
 
+interface userProfileStore{
+    userDetail:{name:string,email:string,image:string,phone:string},
+    setUserDetail:(payload:any)=>void
+}
 
-
-export const userProfileDetail = create((set)=>({
+export const userProfileDetail = create<userProfileStore>((set)=>({
     userDetail:{
         name:'',
         email:'',

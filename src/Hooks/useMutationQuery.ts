@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createTaskService, deleteTaskService, importCsv, updateTaskService } from "../services/tasks"
 import { toast } from "sonner"
+import type { AxiosError } from "axios"
 
 
-export const useCreateUserMutation = (userId) =>{
+export const useCreateUserMutation = (userId:any) =>{
     const query = useQueryClient()
     return useMutation({
         mutationFn:async (data:any) => await createTaskService(data),
@@ -14,17 +15,17 @@ export const useCreateUserMutation = (userId) =>{
                 queryKey: [userId,'task']
             })
         },
-        onError:(error)=>{
+        onError:(error:AxiosError<{message:string}>)=>{
               toast.error(
         error?.response?.data?.message || "Failed to create task"
       );
         }
     })
 }
-export const useImportUserMutation = (userId) =>{
+export const useImportUserMutation = (userId:any) =>{
     const query = useQueryClient()
     return useMutation({
-        mutationFn:async (data:any) => await importCsv(userId,data),
+        mutationFn:async (data:any) => await importCsv(data),
         onSuccess: () => {
             toast.success("Task created successfully successfully");
 
@@ -32,14 +33,14 @@ export const useImportUserMutation = (userId) =>{
                 queryKey: [userId,'task']
             })
         },
-        onError:(error)=>{
+        onError:(error:AxiosError<{message:string}>)=>{
               toast.error(
         error?.response?.data?.message || "Failed to create task"
       );
         }
     })
 }
-export const useUpdateUserMutation = (userId:string) =>{
+export const useUpdateUserMutation = (userId:any) =>{
     const query = useQueryClient()
     return useMutation({
         mutationFn:async (data:any) =>await updateTaskService(data),
@@ -50,17 +51,17 @@ query.invalidateQueries({
     queryKey:[userId,'task']
 })
         },
-        onError:(error)=>{
+        onError:(error:AxiosError<{message:string}>)=>{
     toast.error(
         error?.response?.data?.message || "Failed to create task"
       );
         }
     })
 }
-export const useDeleteUserMutation = (userId:string) =>{
+export const useDeleteUserMutation = (userId:any) =>{
     const query = useQueryClient()
     return useMutation({
-        mutationFn:(id) => deleteTaskService(id),
+        mutationFn:(id:any) => deleteTaskService(id),
         onSuccess:()=> {
                 toast.success("Task Deleted successfully");
 
@@ -68,7 +69,7 @@ query.invalidateQueries({
     queryKey:[userId,'task']
 })
         },
-        onError:(error)=>{
+        onError:(error:AxiosError<{message:string}>)=>{
                  toast.error(
         error?.response?.data?.message || "Failed to delete task"
       );

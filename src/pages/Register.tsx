@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, CheckCircle2, ArrowRight, Sun, Moon } from 'lucide-react';
 import { googleLoginService, loginService } from '../services/user';
 import { useUserDetail } from '../Hooks/userDetail';
@@ -37,13 +37,13 @@ export default function Register() {
 
   const toggleMode = () => setIsLogin(!isLogin);
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
-  const handleSubmit = async(e) => {
+  const handleSubmit = async(e:any) => {
     e.preventDefault();
     if (isLogin) {
       console.log('Logging in with:', { email, password });
     const data = await loginService({ email, password });
     console.log(data)
-    setUserData({id:data.data.user.id, token:data.data.token});
+    setUserData({id:data.data.user.id,name:data.data.user.name, token:data.data.token});
     navigate('/dashboard')
 
     } else {
@@ -204,6 +204,7 @@ export default function Register() {
         setUserData({
           id: data.data.user.id,
           token: data.data.token,
+          name:data.data.user.name
         });
 
         navigate("/dashboard");

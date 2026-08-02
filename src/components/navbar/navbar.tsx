@@ -1,4 +1,4 @@
-import { Bell, LogOut, Menu, Moon, Search, Sun, User } from "lucide-react";
+import {  LogOut, Menu, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "../../Hooks/theme";
 import { useUserDetail } from "../../Hooks/userDetail";
 import { useEffect, useState } from "react";
@@ -65,7 +65,7 @@ root.classList.remove("dark")
 
           <div>
             <h2 className="text-xl font-bold text-main">
-              Dashboard
+              Task Manager
             </h2>
 
             <p className="text-xs text-muted-custom">
@@ -77,20 +77,6 @@ root.classList.remove("dark")
 
         {/* Search */}
 
-        <div className="hidden md:flex items-center relative w-[350px]">
-
-          <Search
-            className="absolute left-3 text-muted-custom"
-            size={18}
-          />
-
-          <input
-            type="text"
-            placeholder="Search tasks..."
-            className="w-full bg-input-custom border border-custom rounded-xl pl-10 pr-4 py-2.5 outline-none text-main"
-          />
-
-        </div>
 
         {/* Right */}
 
@@ -111,7 +97,7 @@ root.classList.remove("dark")
 
           {/* Notification */}
 
-          <button className="relative h-10 w-10 rounded-xl bg-input-custom border border-custom flex items-center justify-center">
+          {/* <button className="relative h-10 w-10 rounded-xl bg-input-custom border border-custom flex items-center justify-center">
 
             <Bell
               size={18}
@@ -120,7 +106,7 @@ root.classList.remove("dark")
 
             <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500"></span>
 
-          </button>
+          </button> */}
 
           {/* User */}
 
@@ -128,7 +114,7 @@ root.classList.remove("dark")
 
             <div className="h-10 w-10 rounded-full bg-primary-custom text-white flex items-center justify-center font-bold">
 
-              {user?.name?.charAt(0).toUpperCase() || (
+              {user?.detail?.name.charAt(0).toUpperCase() || (
                 <User size={18} />
               )}
 
@@ -137,7 +123,7 @@ root.classList.remove("dark")
             <div>
 
               <h3 className="text-sm font-semibold text-main">
-                {user?.name || "Siva"}
+                {user?.detail?.name || "Siva"}
               </h3>
 
               <p className="text-xs text-muted-custom">

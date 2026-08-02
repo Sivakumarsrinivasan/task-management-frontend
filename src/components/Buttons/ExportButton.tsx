@@ -1,12 +1,12 @@
 import { Download, Upload } from "lucide-react";
 import { useRef } from "react";
 type file = {
-    handleFile:(event) => void;
+    handleFile:(event:any) => void;
     exportCsv:() =>void
 }
 const ImportButtonExportButton = ({handleFile,exportCsv}:file) =>{
 
-    const fileRef = useRef(null);
+    const fileRef = useRef<HTMLInputElement>(null);
     const openFile = () =>{
 fileRef?.current?.click();
     }

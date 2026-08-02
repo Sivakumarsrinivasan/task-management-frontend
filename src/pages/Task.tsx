@@ -15,10 +15,10 @@ import { TaskCardSkeleton } from "../components/skeletonCard";
 import { useUserDetail } from "../Hooks/userDetail";
 import ImportButtonExportButton from "../components/Buttons/ExportButton";
 import { useUserCustomHooks } from "../Hooks/useUserCustomHooks";
-import { exportCsvService, importCsv } from "../services/tasks";
+import { exportCsvService } from "../services/tasks";
 
 const Task = () => {
-  const [taskList, setTaskList] = useState([]);
+  const [taskList, setTaskList] = useState<any[]>([]);
   const [page,setPage] = useState(1);
   const [currentpage,setCurrentPage] = useState(0);
   const [totalPage,setTotalPage] = useState(0);
@@ -49,7 +49,7 @@ const { data:userData, isLoading,isFetching } = useTaskQuery(
   sortBy,
   sortOrder
 );
-const {mutate:createMutate} = useCreateUserMutation(userDetail?.id ?? "");
+const {mutate:createMutate} = useCreateUserMutation(userDetail?.id ?? 0);
 const {mutate:updateMutate} = useUpdateUserMutation(userDetail?.id ?? "");
 const {mutate:deleteMutate} = useDeleteUserMutation(userDetail?.id ?? "");
 const {mutate:importCsvMutate} = useImportUserMutation(userDetail?.id ?? "");
@@ -66,7 +66,7 @@ return () =>clearTimeout(timer)
     if (userData) {
       console.log(userData)
       if (nextPageBool) {
-        setTaskList((prev) => [...prev, ...userData.data.row].filter((item, index, self) => index === self.findIndex((a) => a.id === item.id)))
+        setTaskList((prev:any) => [...prev, ...userData.data.row].filter((item, index, self) => index === self.findIndex((a) => a.id === item.id)))
 
       } else {
         setTaskList(userData.data.row)
@@ -153,7 +153,7 @@ const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
   event.target.value = "";
 };
 const exportCsv = async() =>{
-const task = await exportCsvService(userDetail?.id);
+const task = await exportCsvService();
 const csv = Papa.unparse(task);
 const blob = new Blob([csv],{
   type:'text/csv;charset=utf-8;'
@@ -166,7 +166,7 @@ link.click();
 document.body.appendChild(link);
  window.URL.revokeObjectURL(url);
 }
-const preFillValue = (task) =>{
+const preFillValue = (task:any) =>{
 setUpdateTaskId(task?.id); 
 setTaskName(task?.title); 
 setDescription(task?.description); 
@@ -293,7 +293,7 @@ setNextPageBool(true)
               ) : taskList.length > 0 ?
                 <div className="grid h-[85%] pb-[10%] overflow-auto gap-6 md:grid-cols-2 xl:grid-cols-3">
 
-                  {taskList.map((task) => (
+                  {taskList.map((task:any) => (
                     <TaskCard
                       key={task.id}
                       task={task}

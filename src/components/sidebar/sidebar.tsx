@@ -2,13 +2,14 @@ import {
   LayoutDashboard,
   ClipboardList,
   User,
-  Settings,
   LogOut,
   X,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { useUserDetail } from "../../Hooks/userDetail";
+import DeleteConfirmationDialog from "../Dialog/confirmationDialog";
+import { useState } from "react";
 
 interface SidebarProps {
   open: boolean;
@@ -17,7 +18,7 @@ interface SidebarProps {
 
 const Sidebar = ({ open, onClose }: SidebarProps) => {
   const user = useUserDetail((state) => state);
-  const logOutUser = useUserDetail((state)=>state.logout);
+  const logOutUser = useUserDetail((state)=>state.logOut);
   const navigate = useNavigate();
   const menus = [
     {
@@ -41,6 +42,7 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
     logOutUser();
     navigate('/');
   };
+  const [confirmOpen, setConfirmOpen] = useState(false)
   return (
     <>
       {/* Mobile Overlay */}
@@ -122,8 +124,8 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
 
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-indigo-700 text-lg font-bold">
 
-              {user?.name
-                ? user.name.charAt(0).toUpperCase()
+              {user?.detail?.name
+                ? user?.detail.name.charAt(0).toUpperCase()
                 : "S"}
 
             </div>
@@ -131,7 +133,7 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
             <div>
 
               <h3 className="font-semibold">
-                {user?.name || "Siva"}
+                {user?.detail?.name || "Siva"}
               </h3>
 
               <p className="text-xs text-indigo-100">
@@ -144,7 +146,7 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
 
           <button
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 py-3 font-medium transition hover:bg-red-500"
-           onClick={logout}
+           onClick={()=>setConfirmOpen(true)}
           >
             <LogOut size={18} />
 
@@ -153,6 +155,15 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
 
         </div>
       </aside>
+       <DeleteConfirmationDialog
+            isOpen={confirmOpen}
+            onClose={() => setConfirmOpen(false)}
+            title="Logout confirmation"
+            message="Are you sure you want to Log out"
+            onConfirm={logout}
+            buttonTitle="Logout"
+            buttonLoading="wait..."
+          />
     </>
   );
 };

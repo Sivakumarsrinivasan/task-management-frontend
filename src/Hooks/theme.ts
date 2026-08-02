@@ -1,10 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+interface ThemeSetting{
+  theme:string;
+  setTheme:(action:string) => void;
+}
 
-export const useTheme = create(persist((set)=>({
+export const useTheme = create<ThemeSetting>()(persist((set)=>({
     theme:'light',
-    setTheme:(action)=>set({
+    setTheme:(action:string)=>set({
       theme:action 
     })
 
