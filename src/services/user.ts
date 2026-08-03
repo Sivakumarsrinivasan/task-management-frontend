@@ -16,7 +16,8 @@ return val.data
 }
 export const createAccountService = async(data:any) =>{
     try{
-await api.post(`${auth}/register`,data)
+const val = await api.post(`${auth}/register`,data);
+return val.data
 
     }catch(e){
         throw e

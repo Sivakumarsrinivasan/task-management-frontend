@@ -49,7 +49,8 @@ try{
     navigate('/dashboard')
 
     } else {
-      await createAccountService({ name:username, email, password })
+      const val = await createAccountService({ name:username, email, password });
+      toast.success(val.message)
     }
 }catch(e:any){
 console.log(e)
