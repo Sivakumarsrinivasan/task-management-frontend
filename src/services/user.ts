@@ -1,11 +1,18 @@
+import axios from "axios";
 import api from "./api"
 import apiInterceptor from "./apiInterceptor";
 import formDataApi from "./multiPartFormData";
 
 const auth = import.meta.env.VITE_AUTH_URL
 export const loginService = async(data:any) =>{
+    try{
 const val = await api.post(`${auth}/login`,data);
 return val.data
+    }catch(e){
+          
+    throw e;
+    }
+
 }
 export const createAccountService = async(data:any) =>{
 await api.post(`${auth}/register`,data)

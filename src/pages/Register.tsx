@@ -5,6 +5,7 @@ import { useUserDetail } from '../Hooks/userDetail';
 import { useTheme } from '../Hooks/theme';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
+import { toast } from 'sonner';
 
 export default function Register() {
   const [isLogin, setIsLogin] = useState(true);
@@ -39,6 +40,7 @@ export default function Register() {
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
   const handleSubmit = async(e:any) => {
     e.preventDefault();
+try{
     if (isLogin) {
       console.log('Logging in with:', { email, password });
     const data = await loginService({ email, password });
@@ -49,6 +51,10 @@ export default function Register() {
     } else {
       console.log('Registering with:', { username, email, password });
     }
+}catch(e:any){
+console.log(e)
+toast.error(e?.response?.data?.message ?? 'Failed')
+}
   };
 
 
