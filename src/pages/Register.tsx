@@ -1,6 +1,6 @@
 import  { useState, useEffect } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, CheckCircle2, ArrowRight, Sun, Moon } from 'lucide-react';
-import { googleLoginService, loginService } from '../services/user';
+import { createAccountService, googleLoginService, loginService } from '../services/user';
 import { useUserDetail } from '../Hooks/userDetail';
 import { useTheme } from '../Hooks/theme';
 import { useNavigate } from 'react-router-dom';
@@ -49,7 +49,7 @@ try{
     navigate('/dashboard')
 
     } else {
-      console.log('Registering with:', { username, email, password });
+      await createAccountService({ name:username, email, password })
     }
 }catch(e:any){
 console.log(e)

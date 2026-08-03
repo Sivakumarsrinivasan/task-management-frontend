@@ -15,7 +15,12 @@ return val.data
 
 }
 export const createAccountService = async(data:any) =>{
+    try{
 await api.post(`${auth}/register`,data)
+
+    }catch(e){
+        throw e
+    }
 }
 export const getProfileService = async() =>{
 const user = await apiInterceptor.get(`${auth}/me`);
