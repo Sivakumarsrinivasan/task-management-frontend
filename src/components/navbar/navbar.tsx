@@ -1,9 +1,10 @@
-import {  LogOut, Menu, Moon, Sun, User } from "lucide-react";
+import {  LogOut, Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "../../Hooks/theme";
 import { useUserDetail } from "../../Hooks/userDetail";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DeleteConfirmationDialog from "../Dialog/confirmationDialog";
+import { userProfileDetail } from "../../Hooks/userProfileDetail";
 
 interface NavbarProps {
   onMenuClick?: () => void;
@@ -16,6 +17,20 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
   const user = useUserDetail((state) => state);
   const logOutUser = useUserDetail((state) => state.logOut);
   const navigate = useNavigate();
+    const [profileImage, setProfileImage] = useState(
+    "https://via.placeholder.com/150"
+  );
+   const userDetail = userProfileDetail((state)=>state.userDetail)
+
+   useEffect(() => {
+    getProfile();
+  }, [userDetail]);
+
+  const getProfile = async () => {
+
+      setProfileImage(userDetail?.image)
+         
+  };
 
   useEffect(()=>{
 initialRenderTheme();
@@ -95,30 +110,16 @@ root.classList.remove("dark")
             )}
           </button>
 
-          {/* Notification */}
-
-          {/* <button className="relative h-10 w-10 rounded-xl bg-input-custom border border-custom flex items-center justify-center">
-
-            <Bell
-              size={18}
-              className="text-main"
-            />
-
-            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500"></span>
-
-          </button> */}
-
-          {/* User */}
 
           <div className="hidden sm:flex items-center gap-3 rounded-xl border border-custom bg-input-custom px-3 py-2">
 
-            <div className="h-10 w-10 rounded-full bg-primary-custom text-white flex items-center justify-center font-bold">
-
-              {user?.detail?.name.charAt(0).toUpperCase() || (
-                <User size={18} />
-              )}
-
-            </div>
+         <div className="h-10 w-10 rounded-full overflow-hidden border-2 border-primary-custom">
+  <img
+    src={profileImage}
+    alt="profile"
+    className="h-full w-full object-cover"
+  />
+</div>
 
             <div>
 

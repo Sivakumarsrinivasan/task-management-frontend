@@ -9,7 +9,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { useUserDetail } from "../../Hooks/userDetail";
 import DeleteConfirmationDialog from "../Dialog/confirmationDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { userProfileDetail } from "../../Hooks/userProfileDetail";
 
 interface SidebarProps {
   open: boolean;
@@ -20,6 +21,21 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
   const user = useUserDetail((state) => state);
   const logOutUser = useUserDetail((state)=>state.logOut);
   const navigate = useNavigate();
+    const [profileImage, setProfileImage] = useState(
+    "https://via.placeholder.com/150"
+  );
+   const userDetail = userProfileDetail((state)=>state.userDetail)
+  
+   useEffect(() => {
+      getProfile();
+    }, [userDetail]);
+  
+    const getProfile = async () => {
+  
+
+        setProfileImage(userDetail?.image)
+           
+    };
   const menus = [
     {
       name: "Dashboard",
@@ -122,18 +138,18 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
 
           <div className="mb-5 flex items-center gap-3">
 
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-indigo-700 text-lg font-bold">
-
-              {user?.detail?.name
-                ? user?.detail.name.charAt(0).toUpperCase()
-                : "S"}
-
-            </div>
+         <div className="h-20 w-20 rounded-full overflow-hidden border-2 border-primary-custom">
+  <img
+    src={profileImage}
+    alt="profile"
+    className="h-full w-full object-cover"
+  />
+</div>
 
             <div>
 
               <h3 className="font-semibold">
-                {user?.detail?.name || "Siva"}
+                {user?.detail?.name || " "}
               </h3>
 
               <p className="text-xs text-indigo-100">
