@@ -1,4 +1,3 @@
-import axios from "axios";
 import api from "./api"
 import apiInterceptor from "./apiInterceptor";
 import formDataApi from "./multiPartFormData";
