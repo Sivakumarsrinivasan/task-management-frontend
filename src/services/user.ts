@@ -3,13 +3,13 @@ import apiInterceptor from "./apiInterceptor";
 import formDataApi from "./multiPartFormData";
 
 const auth = import.meta.env.VITE_AUTH_URL
-export const loginService = async(data:any) =>{
-    try{
-const val = await api.post(`${auth}/login`,data);
-return val.data
-    }catch(e){
-          
-    throw e;
+export const loginService = async (data: any) => {
+    try {
+        const val = await api.post(`${auth}/login`, data);
+        return val.data
+    } catch (e) {
+
+        throw e;
     }
 
 }
@@ -28,7 +28,12 @@ return user.data
 }
 
 export const updateProfileService = async (formData:any) => {
-    await formDataApi.put(`${auth}/update-profile`, formData);
+    try{
+   const response = await formDataApi.put(`${auth}/update-profile`, formData);
+   return response.data
+    }catch(e){
+        throw e;
+    }
 
 }
 export async function googleLoginService(data:any) {

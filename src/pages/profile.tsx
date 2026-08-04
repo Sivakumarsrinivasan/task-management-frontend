@@ -3,6 +3,7 @@ import { Camera } from "lucide-react";
 import MainLayout from "../layout/mainLayout";
 import { updateProfileService } from "../services/user";
 import { userProfileDetail } from "../Hooks/userProfileDetail";
+import { toast } from "sonner";
 
 const Profile = () => {
   const [name, setName] = useState("");
@@ -16,6 +17,7 @@ const Profile = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
  const userDetail = userProfileDetail((state)=>state.userDetail)
+ const setUserDetail = userProfileDetail((state)=>state.setUserDetail)
   // Fetch Profile
   useEffect(() => {
     getProfile();
@@ -43,9 +45,19 @@ const Profile = () => {
     setProfileImage(URL.createObjectURL(file));
   };
 
+  const checkBeforeUpdate = () => {
+    if (userDetail?.name == name && userDetail?.phone == phone && userDetail?.image == profileImage) {
+      return true;
+    }
+    return false
+  }
   // Update Profile
   const handleSubmit = async () => {
     try {
+      if(checkBeforeUpdate()){
+              toast.error("Make any changes before update")
+return
+      }
       const formData = new FormData();
 
       formData.append("name", name);
@@ -54,11 +66,15 @@ const Profile = () => {
       if (selectedFile) {
         formData.append("profileImage", selectedFile);
       }
-  await updateProfileService(formData)
-   
-   
-    } catch (err) {
-      console.log(err);
+      const response = await updateProfileService(formData);
+      console.log(response);
+      setUserDetail(response?.data)
+      toast.success(response?.message ?? 'Successfully updated')
+
+      //  toast.success()
+    } catch (err: any) {
+      console.log(err?.response);
+      toast.error(err?.response?.data?.error[0]?.msg ?? err?.response?.data?.message ?? 'failed')
     }
   };
 
@@ -114,7 +130,7 @@ const Profile = () => {
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 outline-none"
+              className="w-full text-main rounded-xl border border-custom bg-input-custom px-4 py-3 outline-none"
             />
 
           </div>
@@ -130,7 +146,7 @@ const Profile = () => {
             <input
               value={email}
               disabled
-              className="w-full rounded-xl border border-custom bg-gray-200 px-4 py-3"
+              className="w-full  rounded-xl border border-custom bg-gray-200 px-4 py-3"
             />
 
           </div>
@@ -146,7 +162,7 @@ const Profile = () => {
             <input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full rounded-xl border border-custom bg-input-custom px-4 py-3 outline-none"
+              className="w-full text-main rounded-xl border border-custom bg-input-custom px-4 py-3 outline-none"
             />
 
           </div>
