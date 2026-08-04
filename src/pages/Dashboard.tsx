@@ -127,10 +127,6 @@ setDueDate(task?.due_date.slice(0,16))
                 </p>
               </div>
 
-              <button className="flex items-center gap-2 rounded-2xl bg-primary-custom px-5 py-3 text-white" onClick={() => { setIsEdit(false); setIsDialogOpen(true) }}>
-                <Plus size={20} />
-                New Task
-              </button>
 
             </div>
 

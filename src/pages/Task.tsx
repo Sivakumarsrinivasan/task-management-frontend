@@ -36,11 +36,11 @@ const [search, setSearch] = useState("");
 const [searchinput, setSearchInput] = useState("")
 const [filterStatus, setFilterStatus] = useState("");
 
-const [sortBy, setSortBy] = useState("createdAt");
+const [sortBy, setSortBy] = useState("created_at");
 const [sortOrder, setSortOrder] = useState("desc");
   const userDetail = useUserDetail((detail)=>detail.detail)
-
-const { data:userData, isLoading,isFetching } = useTaskQuery(
+const [limit] = useState(6)
+const { data:userData, isLoading,isFetching,isError,error } = useTaskQuery(
   userDetail?.id ?? "",
   page,
   6,
@@ -49,6 +49,9 @@ const { data:userData, isLoading,isFetching } = useTaskQuery(
   sortBy,
   sortOrder
 );
+if(isError){
+  toast.error(error.message)
+}
 const {mutate:createMutate} = useCreateUserMutation(userDetail?.id ?? 0);
 const {mutate:updateMutate} = useUpdateUserMutation(userDetail?.id ?? "");
 const {mutate:deleteMutate} = useDeleteUserMutation(userDetail?.id ?? "");
@@ -247,7 +250,7 @@ setNextPageBool(true)
 
   <select
     value={filterStatus}
-    onChange={(e) => setFilterStatus(e.target.value)}
+    onChange={(e) => {setPage(1);setFilterStatus(e.target.value)}}
     className="rounded-xl border border-custom bg-input-custom px-4 py-3 text-main"
   >
     <option value="">All Status</option>
@@ -260,10 +263,10 @@ setNextPageBool(true)
 
   <select
     value={sortBy}
-    onChange={(e) => setSortBy(e.target.value)}
+    onChange={(e) => {setPage(1);setSortBy(e.target.value)}}
     className="rounded-xl border border-custom bg-input-custom px-4 py-3 text-main"
   >
-    <option value="createdAt">Created Date</option>
+    <option value="created_at">Created Date</option>
     <option value="title">Title</option>
     <option value="status">Status</option>
     <option value="start_date">Start Date</option>
@@ -274,7 +277,7 @@ setNextPageBool(true)
 
   <select
     value={sortOrder}
-    onChange={(e) => setSortOrder(e.target.value)}
+    onChange={(e) => {setPage(1);setSortOrder(e.target.value)}}
     className="rounded-xl border border-custom bg-input-custom px-4 py-3 text-main"
   >
     <option value="desc">Descending</option>
@@ -301,7 +304,7 @@ setNextPageBool(true)
                       onDelete={() => { setUpdateTaskId(task?.id); setDeleteOpen(true) }}
                     />
                   ))}
-                    {currentpage < totalPage &&
+                    {currentpage < totalPage && taskList.length >= limit &&
                       <LoadMoreButton nextPage={nextPage} />}
 
                 </div> : <EmptyTask />}
