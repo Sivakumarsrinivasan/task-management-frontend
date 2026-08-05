@@ -4,7 +4,6 @@ import {
   Clock3,
   LoaderCircle,
   CircleCheckBig,
-  Plus,
 } from "lucide-react";
 import SummaryCard from "../components/task/summarycard";
 import TaskCard from "../components/task/taskcard";
