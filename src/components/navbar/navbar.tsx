@@ -78,10 +78,11 @@ root.classList.remove("dark")
             <Menu size={20} className="text-main" />
           </button>
 
-          <div>
-            <h2 className="text-xl font-bold text-main">
-              Task Manager
-            </h2>
+          <div className="sm:text-4xl lg:text-5xl">
+          <h1 className="text-base sm:text-xl lg:text-2xl font-bold">
+  <span className="sm:hidden text-main">Task Ma..</span>
+  <span className="hidden sm:inline text-main">Task Manager</span>
+</h1>
 
             <p className="text-xs text-muted-custom">
               Welcome back 👋

@@ -110,18 +110,18 @@ setDueDate(task?.due_date.slice(0,16))
 
           {/* <Navbar onMenuClick={() => setSidebarOpen(true)} /> */}
 
-          <main className="flex-1 p-8">
+          <div className="space-y-8">
 
             {/* Header */}
 
             <div className="mb-8 flex items-center justify-between">
 
               <div>
-                <h1 className="text-4xl font-bold text-main">
+                <h1 className="text-4xl sm:text-4xl lg:text-5xl font-bold text-main">
                   Dashboard
                 </h1>
 
-                <p className="mt-2 text-muted-custom">
+                <p className="mt-2 text-sm sm:text-base text-muted-custom">
                   Welcome back 👋 Here's an overview of your tasks.
                 </p>
               </div>
@@ -139,7 +139,6 @@ setDueDate(task?.due_date.slice(0,16))
                 icon={ClipboardList}
                 color="text-indigo-600"
                 bgColor="bg-indigo-100"
-                increase="+12%"
               />
 
               <SummaryCard
@@ -148,7 +147,6 @@ setDueDate(task?.due_date.slice(0,16))
                 icon={Clock3}
                 color="text-orange-500"
                 bgColor="bg-orange-100"
-                increase="+5%"
               />
 
               <SummaryCard
@@ -157,7 +155,6 @@ setDueDate(task?.due_date.slice(0,16))
                 icon={LoaderCircle}
                 color="text-blue-500"
                 bgColor="bg-blue-100"
-                increase="+3%"
               />
 
               <SummaryCard
@@ -166,7 +163,6 @@ setDueDate(task?.due_date.slice(0,16))
                 icon={CircleCheckBig}
                 color="text-green-500"
                 bgColor="bg-green-100"
-                increase="+20%"
               />
 
             </div>
@@ -200,7 +196,7 @@ setDueDate(task?.due_date.slice(0,16))
 
             </div>
 
-          </main>
+          </div>
           <Dialog
             open={isDialogOpen}
             title="Create New Task"

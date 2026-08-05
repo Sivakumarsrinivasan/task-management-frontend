@@ -207,7 +207,7 @@ setNextPageBool(true)
 
           {/* <Navbar onMenuClick={() => setSidebarOpen(true)} /> */}
 
-          <main className="flex-1 h-full p-8">
+          <div className="h-full space-y-8">
 
             {/* Header */}
 
@@ -233,10 +233,10 @@ setNextPageBool(true)
             {/* Recent Tasks */}
 
             <div className="mt-12 h-full">
-<div className="mb-8 flex flex-wrap justify-between">
+<div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
   {/* Search */}
-  <div className="flex gap-4">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex gap-3 w-full">
 
   <input
     type="text"
@@ -311,7 +311,7 @@ setNextPageBool(true)
 
             </div>
 
-          </main>
+          </div>
           <Dialog
             open={isDialogOpen}
             title="Create New Task"

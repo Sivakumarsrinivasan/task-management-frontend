@@ -57,3 +57,7 @@
 .text-primary-custom { color: var(--primary); }
 
 .border-custom { border-color: var(--border-color); }
+
+::-webkit-scrollbar{
+  visibility: hidden;
+}

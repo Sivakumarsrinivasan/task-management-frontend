@@ -11,7 +11,7 @@ const ImportButtonExportButton = ({handleFile,exportCsv}:file) =>{
 fileRef?.current?.click();
     }
     return(
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex lg:w-[25%] sm:w-[50%] items-center gap-3">
 
   <button
     className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
