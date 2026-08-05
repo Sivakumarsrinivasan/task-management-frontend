@@ -153,11 +153,11 @@ toast.error(e?.response?.data?.message ?? 'Failed')
                 <label className="block text-xs font-semibold text-main uppercase tracking-wider">
                   Password
                 </label>
-                {isLogin && (
+                {/* {isLogin && (
                   <a href="#" className="text-xs font-semibold text-primary-custom hover:underline">
                     Forgot?
                   </a>
-                )}
+                )} */}
               </div>
               <div className="relative">
                 <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-custom" />
