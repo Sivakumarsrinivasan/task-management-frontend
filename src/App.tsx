@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import NotFound from './pages/notFoundPage'
 import { GoogleOAuthProvider } from '@react-oauth/google'
-
+import "driver.js/dist/driver.css";
 function App() {
  const Dashboard = lazy(()=>import('../src/pages/Dashboard'));
  const Task = lazy(()=>import('../src/pages/Task'));

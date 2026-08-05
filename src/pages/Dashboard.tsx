@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import DeleteConfirmationDialog from "../components/Dialog/confirmationDialog";
 import MainLayout from "../layout/mainLayout";
 import { useUserDetail } from "../Hooks/userDetail";
+import AppTour from "../components/Apptour";
+import { dashboardSteps } from "../const/tourGuide";
 
 const Dashboard = () => {
   const [taskList, setTaskList] = useState<any[]>([]);
@@ -95,7 +97,11 @@ setDueDate(task?.due_date.slice(0,16))
 }
   return (
     <>
-
+<AppTour
+userId={userDetail?.id ?? ""}
+      storageKey="dashboard-tour"
+      steps={dashboardSteps}
+    />
       {/* Sidebar */}
 
       {/* <Sidebar
@@ -114,7 +120,7 @@ setDueDate(task?.due_date.slice(0,16))
 
             {/* Header */}
 
-            <div className="mb-8 flex items-center justify-between">
+            <div id="dashboard-title" className="mb-8 flex items-center justify-between">
 
               <div>
                 <h1 className="text-4xl sm:text-4xl lg:text-5xl font-bold text-main">
@@ -131,9 +137,10 @@ setDueDate(task?.due_date.slice(0,16))
 
             {/* Summary */}
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <div  className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
               <SummaryCard
+              id="total-tasks"
                 title="Total Tasks"
                 value={taskList?.length ?? 0}
                 icon={ClipboardList}
@@ -142,6 +149,7 @@ setDueDate(task?.due_date.slice(0,16))
               />
 
               <SummaryCard
+              id="pending-tasks"
                 title="Pending"
                 value={taskList?.filter((a) => a.status == 'pending').length ?? 0}
                 icon={Clock3}
@@ -150,6 +158,7 @@ setDueDate(task?.due_date.slice(0,16))
               />
 
               <SummaryCard
+              id="inprogress-tasks"
                 title="In Progress"
                 value={taskList?.filter((a) => a.status == 'in_progress').length ?? 0}
                 icon={LoaderCircle}
@@ -158,6 +167,7 @@ setDueDate(task?.due_date.slice(0,16))
               />
 
               <SummaryCard
+              id="completed-tasks"
                 title="Completed"
                 value={taskList?.filter((a) => a.status == 'completed').length ?? 0}
                 icon={CircleCheckBig}
@@ -169,7 +179,7 @@ setDueDate(task?.due_date.slice(0,16))
 
             {/* Recent Tasks */}
 
-            <div className="mt-12">
+            <div id="recent-tasks" className="mt-12">
 
               <div className="mb-6 flex items-center justify-between">
 

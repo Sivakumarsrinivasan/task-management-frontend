@@ -16,6 +16,8 @@ import { useUserDetail } from "../Hooks/userDetail";
 import ImportButtonExportButton from "../components/Buttons/ExportButton";
 import { useUserCustomHooks } from "../Hooks/useUserCustomHooks";
 import { exportCsvService } from "../services/tasks";
+import AppTour from "../components/Apptour";
+import { taskSteps } from "../const/tourGuide";
 
 const Task = () => {
   const [taskList, setTaskList] = useState<any[]>([]);
@@ -169,6 +171,35 @@ link.click();
 document.body.appendChild(link);
  window.URL.revokeObjectURL(url);
 }
+const sampleCsv = () => {
+  const headers = [
+    "Title",
+    "description",
+    "status",
+    "start_date",
+    "due_date",
+  ];
+
+  const csv = Papa.unparse([headers], {
+    header: false,
+  });
+
+  const blob = new Blob([csv], {
+    type: "text/csv;charset=utf-8;",
+  });
+
+  const url = window.URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "sample-task.csv";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  window.URL.revokeObjectURL(url);
+};
 const preFillValue = (task:any) =>{
 setUpdateTaskId(task?.id); 
 setTaskName(task?.title); 
@@ -190,8 +221,14 @@ setPage((prev)=>prev+1);
 setNextPageBool(true)
 }
 
+
   return (
     <>
+<AppTour
+userId={userData?.id ?? ''}
+      storageKey="task-tour"
+      steps={taskSteps}
+    />
 
       {/* Sidebar */}
 
@@ -219,7 +256,7 @@ setNextPageBool(true)
                 </h1>
               </div>
 
-              <button className="flex items-center gap-2 rounded-2xl bg-primary-custom px-5 py-3 text-white" onClick={() => { setIsEdit(false); setIsDialogOpen(true); clearValue()}}>
+              <button id="create-task-btn" className="flex items-center gap-2 rounded-2xl bg-primary-custom px-5 py-3 text-white" onClick={() => { setIsEdit(false); setIsDialogOpen(true); clearValue()}}>
                 <Plus size={20} />
                 New Task
               </button>
@@ -239,6 +276,7 @@ setNextPageBool(true)
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex gap-3 w-full">
 
   <input
+  id="task-search"
     type="text"
     placeholder="Search task..."
     value={searchinput}
@@ -249,6 +287,7 @@ setNextPageBool(true)
   {/* Status */}
 
   <select
+  id="task-filter"
     value={filterStatus}
     onChange={(e) => {setPage(1);setFilterStatus(e.target.value)}}
     className="rounded-xl border border-custom bg-input-custom px-4 py-3 text-main"
@@ -262,6 +301,7 @@ setNextPageBool(true)
   {/* Sort By */}
 
   <select
+  id="task-sort"
     value={sortBy}
     onChange={(e) => {setPage(1);setSortBy(e.target.value)}}
     className="rounded-xl border border-custom bg-input-custom px-4 py-3 text-main"
@@ -284,7 +324,7 @@ setNextPageBool(true)
     <option value="asc">Ascending</option>
   </select>
 </div>
-  <ImportButtonExportButton handleFile={handleFile} exportCsv={exportCsv}/>
+  <ImportButtonExportButton handleFile={handleFile} exportCsv={exportCsv} sampleCsv={sampleCsv}/>
 
 </div>
               {isLoading || isFetching ? (
@@ -294,7 +334,7 @@ setNextPageBool(true)
                   ))}
                 </div>
               ) : taskList.length > 0 ?
-                <div className="grid h-[85%] pb-[10%] overflow-auto gap-6 md:grid-cols-2 xl:grid-cols-3">
+                <div id="task-list" className="grid h-[85%] pb-[10%] overflow-auto gap-6 md:grid-cols-2 xl:grid-cols-3">
 
                   {taskList.map((task:any) => (
                     <TaskCard

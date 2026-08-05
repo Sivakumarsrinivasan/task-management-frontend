@@ -8,6 +8,7 @@ interface SummaryCardProps {
   color: string;
   bgColor: string;
   increase?: string;
+  id?:string
 }
 
 const SummaryCard = ({
@@ -17,9 +18,10 @@ const SummaryCard = ({
   color,
   bgColor,
   increase,
+  id
 }: SummaryCardProps) => {
   return (
-    <div className="group rounded-3xl border border-custom bg-surface p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <div id={id} className="group rounded-3xl border border-custom bg-surface p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
 
       <div className="flex items-start justify-between">
 

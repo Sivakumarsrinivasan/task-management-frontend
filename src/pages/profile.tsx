@@ -4,6 +4,9 @@ import MainLayout from "../layout/mainLayout";
 import { updateProfileService } from "../services/user";
 import { userProfileDetail } from "../Hooks/userProfileDetail";
 import { toast } from "sonner";
+import { profileSteps } from "../const/tourGuide";
+import AppTour from "../components/Apptour";
+import { useUserDetail } from "../Hooks/userDetail";
 
 const Profile = () => {
   const [name, setName] = useState("");
@@ -16,8 +19,10 @@ const Profile = () => {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
- const userDetail = userProfileDetail((state)=>state.userDetail)
- const setUserDetail = userProfileDetail((state)=>state.setUserDetail)
+ const userDetail = userProfileDetail((state)=>state.userDetail);
+ const setUserDetail = userProfileDetail((state)=>state.setUserDetail);
+   const userMainDetail = useUserDetail((detail)=>detail.detail)
+ 
   // Fetch Profile
   useEffect(() => {
     getProfile();
@@ -79,8 +84,14 @@ return
   };
 
   return (
+    <>
+    <AppTour
+    userId={userMainDetail?.id ?? ''}
+      storageKey="profile-tour"
+      steps={profileSteps}
+    />
     <MainLayout>
-      <div className="mx-auto max-w-3xl p-8">
+      <div id="profile-menu" className="mx-auto max-w-3xl p-8">
 
         <div className="rounded-3xl bg-card-custom p-8 shadow-lg">
 
@@ -92,7 +103,7 @@ return
 
           <div className="mb-10 flex flex-col items-center">
 
-            <div className="relative">
+            <div className="relative" id="profile-image">
 
               <img
                 src={profileImage}
@@ -121,7 +132,7 @@ return
 
           {/* Name */}
 
-          <div className="mb-6">
+          <div id="profile-name" className="mb-6">
 
             <label className="mb-2 block text-sm text-main">
               Name
@@ -137,7 +148,7 @@ return
 
           {/* Email */}
 
-          <div className="mb-6">
+          <div id="profile-email" className="mb-6">
 
             <label className="mb-2 block text-sm text-main">
               Email
@@ -153,7 +164,7 @@ return
 
           {/* Phone */}
 
-          <div className="mb-8">
+          <div id="profile-phone" className="mb-8">
 
             <label className="mb-2 block text-sm text-main">
               Phone
@@ -167,9 +178,10 @@ return
 
           </div>
 
-          <div className="flex justify-end">
+          <div  className="flex justify-end">
 
             <button
+            id="save-profile-btn"
               onClick={handleSubmit}
               className="rounded-xl bg-primary-custom px-6 py-3 text-white"
             >
@@ -182,6 +194,7 @@ return
 
       </div>
     </MainLayout>
+    </>
   );
 };
 
