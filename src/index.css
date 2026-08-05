@@ -27,6 +27,12 @@
   
   --status-completed-bg: #d1fae5;
   --status-completed-text: #065f46;
+    --sidebar-bg: #1e293b;
+  --sidebar-hover: #334155;
+  --sidebar-active: #4f46e5;
+  --sidebar-text: #e2e8f0;
+  --sidebar-text-active: #ffffff;
+  --sidebar-border: #334155;
 }
 
 .dark {
@@ -42,6 +48,12 @@
   --primary-light: #312e81;   /* Indigo 900 */
 
   --border-color: #334155;    /* Slate 700 */
+ --sidebar-bg: #111827;
+  --sidebar-hover: #1f2937;
+  --sidebar-active: #6366f1;
+  --sidebar-text: #cbd5e1;
+  --sidebar-text-active: #ffffff;
+  --sidebar-border: #374151;
 }
 
 /* Custom CSS Variable Utility Classes */
@@ -57,6 +69,15 @@
 .text-primary-custom { color: var(--primary); }
 
 .border-custom { border-color: var(--border-color); }
+.sidebar {
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+}
+
+.menu-item.active {
+    background: rgba(99, 102, 241, 0.18);
+    border-left: 4px solid var(--primary);
+}
 
 ::-webkit-scrollbar{
   visibility: hidden;

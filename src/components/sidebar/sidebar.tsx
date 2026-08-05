@@ -60,127 +60,108 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
   };
   const [confirmOpen, setConfirmOpen] = useState(false)
   return (
-    <>
-      {/* Mobile Overlay */}
+ <>
+  {/* Mobile Overlay */}
+  {open && (
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+    />
+  )}
 
-      {open && (
-        <div
-          onClick={onClose}
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
-        />
-      )}
+  {/* Sidebar */}
+  <aside
+    className={clsx(
+      "sidebar fixed top-0 left-0 z-50 h-screen w-72 border-r shadow-2xl transition-transform duration-300 lg:static",
+      open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+    )}
+  >
+    {/* Header */}
+    <div className="flex items-center justify-between border-b border-custom px-6 py-5">
+      <div>
+        <h1 className="text-2xl font-bold tracking-wide">
+          TaskFlow
+        </h1>
 
-      {/* Sidebar */}
+        <p className="text-xs text-muted-custom">
+          Task Management
+        </p>
+      </div>
 
-      <aside
-        className={clsx(
-          "fixed lg:static top-0 left-0 z-50 h-screen w-72",
-          "bg-gradient-to-b from-indigo-600 via-indigo-700 to-indigo-900",
-          "text-white shadow-2xl",
-          "transition-transform duration-300",
-          open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        )}
+      <button
+        onClick={onClose}
+        className="rounded-lg p-2 transition hover:bg-white/10 lg:hidden"
       >
-        {/* Header */}
+        <X size={20} />
+      </button>
+    </div>
 
-        <div className="flex items-center justify-between border-b border-white/20 px-6 py-5">
-          <div>
-            <h1 className="text-2xl font-bold tracking-wide">
-              TaskFlow
-            </h1>
+    {/* Menu */}
+    <nav className="mt-8 space-y-2 px-4">
+      {menus.map((menu) => {
+        const Icon = menu.icon;
 
-            <p className="text-xs text-indigo-100">
-              Task Management
-            </p>
-          </div>
-
-          <button
+        return (
+          <NavLink
+            key={menu.path}
+            to={menu.path}
             onClick={onClose}
-            className="rounded-lg p-2 hover:bg-white/10 lg:hidden"
+            className={({ isActive }) =>
+              clsx(
+                "menu-item flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-300",
+                isActive && "active"
+              )
+            }
           >
-            <X size={20} />
-          </button>
-        </div>
+            <Icon size={20} />
+            <span className="font-medium">{menu.name}</span>
+          </NavLink>
+        );
+      })}
+    </nav>
 
-        {/* Menu */}
-
-        <nav className="mt-8 px-4 space-y-2">
-          {menus.map((menu) => {
-            const Icon = menu.icon;
-
-            return (
-              <NavLink
-                key={menu.path}
-                to={menu.path}
-                onClick={onClose}
-                className={({ isActive }) =>
-                  clsx(
-                    "flex items-center gap-4 rounded-2xl px-4 py-3 transition-all duration-300",
-                    isActive
-                      ? "bg-white text-indigo-700 shadow-lg"
-                      : "hover:bg-white/10"
-                  )
-                }
-              >
-                <Icon size={20} />
-
-                <span className="font-medium">
-                  {menu.name}
-                </span>
-              </NavLink>
-            );
-          })}
-        </nav>
-
-        {/* Bottom */}
-
-        <div className="absolute bottom-0 left-0 w-full border-t border-white/20 p-5">
-
-          <div className="mb-5 flex items-center gap-3">
-
-         <div className="h-20 w-20 rounded-full overflow-hidden border-2 border-primary-custom">
-  <img
-    src={profileImage}
-    alt="profile"
-    className="h-full w-full object-cover"
-  />
-</div>
-
-            <div>
-
-              <h3 className="font-semibold">
-                {user?.detail?.name || " "}
-              </h3>
-
-              <p className="text-xs text-indigo-100">
-                Software Developer
-              </p>
-
-            </div>
-
-          </div>
-
-          <button
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 py-3 font-medium transition hover:bg-red-500"
-           onClick={()=>setConfirmOpen(true)}
-          >
-            <LogOut size={18} />
-
-            Logout
-          </button>
-
-        </div>
-      </aside>
-       <DeleteConfirmationDialog
-            isOpen={confirmOpen}
-            onClose={() => setConfirmOpen(false)}
-            title="Logout confirmation"
-            message="Are you sure you want to Log out"
-            onConfirm={logout}
-            buttonTitle="Logout"
-            buttonLoading="wait..."
+    {/* Bottom */}
+    <div className="absolute bottom-0 left-0 w-full border-t border-custom p-5">
+      <div className="mb-5 flex items-center gap-3">
+        <div className="h-20 w-20 overflow-hidden rounded-full border-2 border-primary-custom">
+          <img
+            src={profileImage}
+            alt="profile"
+            className="h-full w-full object-cover"
           />
-    </>
+        </div>
+
+        <div>
+          <h3 className="font-semibold">
+            {user?.detail?.name || ""}
+          </h3>
+
+          <p className="text-xs text-muted-custom">
+            Software Developer
+          </p>
+        </div>
+      </div>
+
+      <button
+        onClick={() => setConfirmOpen(true)}
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 py-3 font-medium transition hover:bg-red-500"
+      >
+        <LogOut size={18} />
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <DeleteConfirmationDialog
+    isOpen={confirmOpen}
+    onClose={() => setConfirmOpen(false)}
+    title="Logout confirmation"
+    message="Are you sure you want to Log out?"
+    onConfirm={logout}
+    buttonTitle="Logout"
+    buttonLoading="Wait..."
+  />
+</>
   );
 };
 

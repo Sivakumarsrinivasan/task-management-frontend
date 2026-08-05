@@ -15,9 +15,9 @@ export const useCreateUserMutation = (userId:any) =>{
                 queryKey: [userId,'task']
             })
         },
-        onError:(error:AxiosError<{message:string}>)=>{
+        onError:(error:AxiosError<{message:string,error:any}>)=>{
               toast.error(
-        error?.response?.data?.message || "Failed to create task"
+      error?.response?.data?.error[0]?.msg ||  error?.response?.data?.message    || "Failed to create task"
       );
         }
     })
