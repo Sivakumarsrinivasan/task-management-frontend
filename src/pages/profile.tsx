@@ -72,13 +72,11 @@ return
         formData.append("profileImage", selectedFile);
       }
       const response = await updateProfileService(formData);
-      console.log(response);
       setUserDetail(response?.data)
       toast.success(response?.message ?? 'Successfully updated')
 
       //  toast.success()
     } catch (err: any) {
-      console.log(err?.response);
       toast.error(err?.response?.data?.error[0]?.msg ?? err?.response?.data?.message ?? 'failed')
     }
   };

@@ -24,13 +24,7 @@ const Dashboard = () => {
   isPending,
   isError,
   error,} = useTaskQuery(userDetail?.id ?? "",0,3);
-console.log({
-  userData,
-  isLoading,
-  isPending,
-  isError,
-  error,
-});  
+ 
 const {mutate:createMutate} = useCreateUserMutation(userDetail?.id ?? "");
 const {mutate:updateMutate} = useUpdateUserMutation(userDetail?.id ?? "");
 const {mutate:deleteMutate} = useDeleteUserMutation(userDetail?.id ?? "");
@@ -46,7 +40,6 @@ const [dueDate, setDueDate] = useState("");
 
   useEffect(() => {
     if (userData) {
-      console.log(userData)
       setTaskList(userData.data.row)
 
     }
@@ -75,7 +68,6 @@ const [dueDate, setDueDate] = useState("");
     setIsDialogOpen(false)
   }
   const handleDelete = async () => {
-    console.log("Delete")
     await deleteMutate(updateTaskId);
     setDeleteOpen(false);
     setUpdateTaskId("");

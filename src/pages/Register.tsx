@@ -42,9 +42,7 @@ export default function Register() {
     e.preventDefault();
 try{
     if (isLogin) {
-      console.log('Logging in with:', { email, password });
     const data = await loginService({ email, password });
-    console.log(data)
     setUserData({id:data.data.user.id,name:data.data.user.name, token:data.data.token});
     navigate('/dashboard')
 
@@ -53,7 +51,6 @@ try{
       toast.success(val.message)
     }
 }catch(e:any){
-console.log(e)
 toast.error(e?.response?.data?.message ?? 'Failed')
 }
   };

@@ -68,11 +68,9 @@ const timer = setTimeout(() => {
 return () =>clearTimeout(timer)
 },[searchinput])
 
-console.log(startDate);
 
   useEffect(() => {
     if (userData) {
-      console.log(userData)
       if (nextPageBool) {
         setTaskList((prev:any) => [...prev, ...userData.data.row].filter((item, index, self) => index === self.findIndex((a) => a.id === item.id)))
 
@@ -87,7 +85,6 @@ console.log(startDate);
   }, [userData])
 
   const submitValue = async () => {
-    // console.log({title:taskName,description,status})
       if (new Date(startDate) > new Date(dueDate)) {
     toast.error("Due date must be after the start date.");
     return;
@@ -109,7 +106,6 @@ console.log(startDate);
     setIsDialogOpen(false)
   }
   const handleDelete = async () => {
-    console.log("Delete")
     await deleteMutate(updateTaskId);
     setDeleteOpen(false);
     setUpdateTaskId("");
@@ -130,10 +126,8 @@ const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     header: true,
     skipEmptyLines: true,
     complete: (results: ParseResult<Record<string, string>>) => {
-      console.log(results.data);
       let error = errorValidator(results.data);
       if (error.length > 0) {
-        console.log('error', error)
         let columnName = '';
         let fileldName = '';
         if (error.length == 1) {
