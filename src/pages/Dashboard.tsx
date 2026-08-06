@@ -20,10 +20,7 @@ import { dashboardSteps } from "../const/tourGuide";
 const Dashboard = () => {
   const [taskList, setTaskList] = useState<any[]>([]);
   const userDetail = useUserDetail((detail)=>detail.detail)
-  const {data:userData, isLoading,
-  isPending,
-  isError,
-  error,} = useTaskQuery(userDetail?.id ?? "",0,3);
+  const {data:userData} = useTaskQuery(userDetail?.id ?? "",0,3);
  
 const {mutate:createMutate} = useCreateUserMutation(userDetail?.id ?? "");
 const {mutate:updateMutate} = useUpdateUserMutation(userDetail?.id ?? "");
