@@ -1,30 +1,28 @@
+import { convertDateTime, convertUsFormat } from "./dateFormat"
 
+//  Here change the status in correct formt like pending, completed, in_progress
 export const Status = (value: any) => {
     for (let i = 0; i < value.length; i++) {
-        if (value[i].status.toLowerCase().includes('progress')) {
+        if (value[i]?.status?.toLowerCase()?.includes('progress')) {
             value[i].status = 'in_progress'
-        } else if (value[i].status.toLowerCase().includes('pending')) {
+        } else if (value[i]?.status?.toLowerCase()?.includes('pending')) {
             value[i].status = 'pending'
-        } else if (value[i].status.toLowerCase().includes('completed')) {
+        } else if (value[i]?.status?.toLowerCase()?.includes('completed')) {
             value[i].status = 'completed'
         } else {
             value[i].status = 'pending'
         }
-        const start_date = new Date(value[i].start_date);
-        value[i].start_date = format(start_date);
-        const due_date = new Date(value[i].due_date);
+        const start_date = value[i].start_date;
+        value[i].start_date = convertUsFormat(start_date);
+        const due_date = value[i].due_date;
 
-        value[i].due_date = format(due_date);
+        value[i].due_date = convertUsFormat(due_date);
 
     }
     return value
 }
 
-const format = (date: any) => {
-
-    let date1 = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}:00`;
-    return date1;
-}
+// Once we export that time we need to convert the UST in to normal format
 
 export const displayData = (data:any) =>{
     for(let i =0; i<data.length;i++){
@@ -34,6 +32,6 @@ export const displayData = (data:any) =>{
     return data;
 }
 const reverseFormat = (a:any) =>{
-   return a.split('T')[0] + ' ' + a.split('T')[1].split('.')[0]
+   return convertDateTime(a)
 
 }

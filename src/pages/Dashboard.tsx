@@ -16,6 +16,7 @@ import MainLayout from "../layout/mainLayout";
 import { useUserDetail } from "../Hooks/userDetail";
 import AppTour from "../components/Apptour";
 import { dashboardSteps } from "../const/tourGuide";
+import { convertDateTime, convertUsFormat, formatForDateTimeInput } from "../const/dateFormat";
 
 const Dashboard = () => {
   const [taskList, setTaskList] = useState<any[]>([]);
@@ -43,21 +44,22 @@ const [dueDate, setDueDate] = useState("");
   }, [userData])
 
   const submitValue = async () => {
-    // console.log({title:taskName,description,status})
-      if (new Date(startDate) > new Date(dueDate)) {
-    toast.error("Due date must be after the start date.");
-    return;
-  }
-  if(!taskName || !startDate || !dueDate){
-    toast.error("Please fill the required field");
-    return
-  }
+    if (new Date(startDate) > new Date(dueDate)) {
+      toast.error("Due date must be after the start date.");
+      return;
+    }
+    if (!taskName || !startDate || !dueDate) {
+      toast.error("Please fill the required field");
+      return
+    }
+    const utcStartDate = convertUsFormat(startDate);
+    const utcDueDate = convertUsFormat(dueDate);
     if (isEdit) {
-      await updateMutate({ id: updateTaskId, title: taskName, description, status,start_date:startDate,due_date:dueDate })
+      await updateMutate({ id: updateTaskId, title: taskName, description, status, start_date: utcStartDate, due_date: utcDueDate })
       setUpdateTaskId("");
 
     } else {
-      await createMutate({ title: taskName, description, status,start_date:startDate,due_date:dueDate  })
+      await createMutate({ title: taskName, description, status, start_date: utcStartDate, due_date: utcDueDate })
 
 
     }
@@ -76,13 +78,19 @@ const [dueDate, setDueDate] = useState("");
     setStartDate('');
     setDueDate('');
   }
-  const preFillValue = (task:any) =>{
+const preFillValue = (task:any) =>{
 setUpdateTaskId(task?.id); 
 setTaskName(task?.title); 
 setDescription(task?.description); 
 setStatus(task?.status);
-setStartDate(task?.start_date.slice(0,16)); 
-setDueDate(task?.due_date.slice(0,16))
+let sdate  = convertDateTime(task?.start_date);
+let sdatestring = formatForDateTimeInput(sdate)
+setStartDate(sdatestring); 
+let dDate = convertDateTime(task?.due_date)
+let ddatestring = formatForDateTimeInput(dDate)
+setDueDate(ddatestring)
+// setStartDate(task?.start_date.slice(0,16)); 
+// setDueDate(task?.due_date.slice(0,16))
 }
   return (
     <>

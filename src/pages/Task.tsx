@@ -19,6 +19,7 @@ import { exportCsvService } from "../services/tasks";
 import AppTour from "../components/Apptour";
 import { taskSteps } from "../const/tourGuide";
 import { displayData, Status } from "../const/status";
+import { convertDateTime, convertUsFormat, formatForDateTimeInput } from "../const/dateFormat";
 
 const Task = () => {
   const [taskList, setTaskList] = useState<any[]>([]);
@@ -93,12 +94,14 @@ return () =>clearTimeout(timer)
     toast.error("Please fill the required field");
     return
   }
+  const utcStartDate = convertUsFormat(startDate);
+  const utcDueDate = convertUsFormat(dueDate);
     if (isEdit) {
-      await updateMutate({ id: updateTaskId, title: taskName, description, status,start_date:startDate,due_date:dueDate })
+      await updateMutate({ id: updateTaskId, title: taskName, description, status,start_date:utcStartDate,due_date:utcDueDate })
       setUpdateTaskId("");
 
     } else {
-      await createMutate({ title: taskName, description, status,start_date:startDate,due_date:dueDate })
+      await createMutate({ title: taskName, description, status,start_date:utcStartDate,due_date:utcDueDate })
 
 
     }
@@ -204,8 +207,14 @@ setUpdateTaskId(task?.id);
 setTaskName(task?.title); 
 setDescription(task?.description); 
 setStatus(task?.status);
-setStartDate(task?.start_date.slice(0,16)); 
-setDueDate(task?.due_date.slice(0,16))
+let sdate  = convertDateTime(task?.start_date);
+let sdatestring = formatForDateTimeInput(sdate)
+setStartDate(sdatestring); 
+let dDate = convertDateTime(task?.due_date)
+let ddatestring = formatForDateTimeInput(dDate)
+setDueDate(ddatestring)
+// setStartDate(task?.start_date.slice(0,16)); 
+// setDueDate(task?.due_date.slice(0,16))
 }
 const clearValue = () =>{
 setUpdateTaskId(""); 
