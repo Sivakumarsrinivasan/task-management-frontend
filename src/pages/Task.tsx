@@ -18,6 +18,7 @@ import { useUserCustomHooks } from "../Hooks/useUserCustomHooks";
 import { exportCsvService } from "../services/tasks";
 import AppTour from "../components/Apptour";
 import { taskSteps } from "../const/tourGuide";
+import { displayData, Status } from "../const/status";
 
 const Task = () => {
   const [taskList, setTaskList] = useState<any[]>([]);
@@ -66,6 +67,8 @@ const timer = setTimeout(() => {
 
 return () =>clearTimeout(timer)
 },[searchinput])
+
+console.log(startDate);
 
   useEffect(() => {
     if (userData) {
@@ -147,7 +150,8 @@ const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
         toast.error(`Please check you task "${columnName}" there is an invalid field in "${fileldName}"`);
         return
       }
-      importCsvMutate(results.data)
+      const data = Status(results.data)
+      importCsvMutate(data)
     },
     error: (error) => {
       console.error(error);
@@ -159,7 +163,8 @@ const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
 };
 const exportCsv = async() =>{
 const task = await exportCsvService();
-const csv = Papa.unparse(task);
+ const data = displayData(task)
+const csv = Papa.unparse(data);
 const blob = new Blob([csv],{
   type:'text/csv;charset=utf-8;'
 })
@@ -172,17 +177,17 @@ document.body.appendChild(link);
  window.URL.revokeObjectURL(url);
 }
 const sampleCsv = () => {
-  const headers = [
-    "Title",
-    "description",
-    "status",
-    "start_date",
-    "due_date",
+  const sampleData = [
+    {
+      title: "Complete React Dashboard",
+      description: "Finish dashboard UI and API integration",
+      status: "pending",
+      start_date: "2026-08-06 09:00 AM",
+      due_date: "2026-08-10 06:00 PM",
+    },
   ];
 
-  const csv = Papa.unparse([headers], {
-    header: false,
-  });
+  const csv = Papa.unparse(sampleData);
 
   const blob = new Blob([csv], {
     type: "text/csv;charset=utf-8;",
