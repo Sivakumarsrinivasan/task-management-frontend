@@ -5,7 +5,6 @@ import {
 
 import Papa, { type ParseResult } from "papaparse";
 import TaskCard, { type Task } from "../components/task/taskcard";
-import { useTaskQuery } from "../Hooks/useQuery";
 import Dialog from "../components/Dialog/Dialog";
 import { useCreateUserMutation, useDeleteUserMutation, useImportUserMutation, useUpdateUserMutation } from "../Hooks/useMutationQuery";
 import { toast } from "sonner";
@@ -20,13 +19,10 @@ import AppTour from "../components/Apptour";
 import { taskSteps } from "../const/tourGuide";
 import { displayData, Status } from "../const/status";
 import { convertDateTime, convertUsFormat, formatForDateTimeInput } from "../const/dateFormat";
+import { useInfinteTaskQuery } from "../Hooks/useTaskInfiniteQuery";
 
 const Task = () => {
   const [taskList, setTaskList] = useState<any[]>([]);
-  const [page,setPage] = useState(1);
-  const [currentpage,setCurrentPage] = useState(0);
-  const [totalPage,setTotalPage] = useState(0);
-  const [nextPageBool, setNextPageBool] =useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [description, setDescription] = useState("");
   const [taskName, setTaskName] = useState("");
@@ -44,15 +40,16 @@ const [sortBy, setSortBy] = useState("created_at");
 const [sortOrder, setSortOrder] = useState("desc");
   const userDetail = useUserDetail((detail)=>detail.detail)
 const [limit] = useState(6)
-const { data:userData, isLoading,isFetching,isError,error } = useTaskQuery(
-  userDetail?.id ?? "",
-  page,
-  6,
-  search,
-  filterStatus,
-  sortBy,
-  sortOrder
-);
+// const { data:userData, isLoading,isFetching,isError,error } = useTaskQuery(
+//   userDetail?.id ?? "",
+//   page,
+//   6,
+//   search,
+//   filterStatus,
+//   sortBy,
+//   sortOrder
+// );
+const {data:userData, fetchNextPage, hasNextPage,isError,error, isLoading, isFetching} = useInfinteTaskQuery(userDetail?.id ?? "",limit,search,filterStatus,sortBy,sortOrder)
 if(isError){
   toast.error(error.message)
 }
@@ -71,18 +68,11 @@ return () =>clearTimeout(timer)
 
 
   useEffect(() => {
-    if (userData) {
-      if (nextPageBool) {
-        setTaskList((prev:any) => [...prev, ...userData.data.row].filter((item, index, self) => index === self.findIndex((a) => a.id === item.id)))
-
-      } else {
-        setTaskList(userData.data.row)
-      }
-      setNextPageBool(false)
-      setCurrentPage(userData.data.paginationDetail.currentPage);
-      setTotalPage(userData.data.paginationDetail.totalPage);
-
-    }
+    let data = userData?.pages.flatMap((a)=>a.data.row);
+     if(data){
+      console.log(userData)
+    setTaskList(data);
+}
   }, [userData])
 
   const submitValue = async () => {
@@ -224,16 +214,13 @@ setStatus("pending");
 setStartDate(""); 
 setDueDate("")
 }
-const nextPage = () =>{
-setPage((prev)=>prev+1);
-setNextPageBool(true)
-}
+
 
 
   return (
     <>
 <AppTour
-userId={userData?.id ?? ''}
+userId={userDetail?.id ?? ''}
       storageKey="task-tour"
       steps={taskSteps}
     />
@@ -297,7 +284,7 @@ userId={userData?.id ?? ''}
   <select
   id="task-filter"
     value={filterStatus}
-    onChange={(e) => {setPage(1);setFilterStatus(e.target.value)}}
+    onChange={(e) => {setFilterStatus(e.target.value)}}
     className="rounded-xl border border-custom bg-input-custom px-4 py-3 text-main"
   >
     <option value="">All Status</option>
@@ -311,7 +298,7 @@ userId={userData?.id ?? ''}
   <select
   id="task-sort"
     value={sortBy}
-    onChange={(e) => {setPage(1);setSortBy(e.target.value)}}
+    onChange={(e) => {setSortBy(e.target.value)}}
     className="rounded-xl border border-custom bg-input-custom px-4 py-3 text-main"
   >
     <option value="created_at">Created Date</option>
@@ -325,7 +312,7 @@ userId={userData?.id ?? ''}
 
   <select
     value={sortOrder}
-    onChange={(e) => {setPage(1);setSortOrder(e.target.value)}}
+    onChange={(e) => {setSortOrder(e.target.value)}}
     className="rounded-xl border border-custom bg-input-custom px-4 py-3 text-main"
   >
     <option value="desc">Descending</option>
@@ -352,8 +339,8 @@ userId={userData?.id ?? ''}
                       onDelete={() => { setUpdateTaskId(task?.id); setDeleteOpen(true) }}
                     />
                   ))}
-                    {currentpage < totalPage && taskList.length >= limit &&
-                      <LoadMoreButton nextPage={nextPage} />}
+                    {hasNextPage && taskList.length>=6 &&
+                      <LoadMoreButton nextPage={fetchNextPage} />}
 
                 </div> : <EmptyTask />}
 
