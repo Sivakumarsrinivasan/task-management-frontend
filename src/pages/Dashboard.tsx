@@ -17,6 +17,7 @@ import { useUserDetail } from "../Hooks/userDetail";
 import AppTour from "../components/Apptour";
 import { dashboardSteps } from "../const/tourGuide";
 import { convertDateTime, convertUsFormat, formatForDateTimeInput } from "../const/dateFormat";
+import type { TaskDetail } from "../const/type";
 
 const Dashboard = () => {
   const [taskList, setTaskList] = useState<any[]>([]);
@@ -35,11 +36,24 @@ const {mutate:deleteMutate} = useDeleteUserMutation(userDetail?.id ?? "");
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [startDate, setStartDate] = useState("");
 const [dueDate, setDueDate] = useState("");
+const [taskDetail, setTaskDetail] = useState<TaskDetail>()
 
   useEffect(() => {
     if (userData) {
-      setTaskList(userData.data.row)
+      setTaskList(userData?.data?.row ?? [])
+      const {
+      total,
+      in_progress,
+      pending,
+      completed
+    } = userData?.data?.paginationDetail ?? {};
 
+    setTaskDetail({
+      total,
+      in_progress,
+      pending,
+      completed
+    });
     }
   }, [userData])
 
@@ -139,7 +153,7 @@ userId={userDetail?.id ?? ""}
               <SummaryCard
               id="total-tasks"
                 title="Total Tasks"
-                value={taskList?.length ?? 0}
+                value={taskDetail?.total ?? 0}
                 icon={ClipboardList}
                 color="text-indigo-600"
                 bgColor="bg-indigo-100"
@@ -148,7 +162,7 @@ userId={userDetail?.id ?? ""}
               <SummaryCard
               id="pending-tasks"
                 title="Pending"
-                value={taskList?.filter((a) => a.status == 'pending').length ?? 0}
+                value={taskDetail?.pending ?? 0}
                 icon={Clock3}
                 color="text-orange-500"
                 bgColor="bg-orange-100"
@@ -157,7 +171,7 @@ userId={userDetail?.id ?? ""}
               <SummaryCard
               id="inprogress-tasks"
                 title="In Progress"
-                value={taskList?.filter((a) => a.status == 'in_progress').length ?? 0}
+                value={taskDetail?.in_progress ?? 0}
                 icon={LoaderCircle}
                 color="text-blue-500"
                 bgColor="bg-blue-100"
@@ -166,7 +180,7 @@ userId={userDetail?.id ?? ""}
               <SummaryCard
               id="completed-tasks"
                 title="Completed"
-                value={taskList?.filter((a) => a.status == 'completed').length ?? 0}
+                value={taskDetail?.completed ?? 0}
                 icon={CircleCheckBig}
                 color="text-green-500"
                 bgColor="bg-green-100"
