@@ -28,8 +28,9 @@ function App() {
       <Route path='/dashboard' element={<Dashboard/>}/>
       <Route path='/tasks' element={<Task/>}/>
       <Route path='/profile' element={<Profile/>}/>
-      <Route path='*' element={<NotFound/>}/>
       </Route>
+            <Route path='*' element={<NotFound/>}/>
+
     </Routes>
     </Suspense>
     </QueryClientProvider>
