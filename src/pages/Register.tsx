@@ -51,7 +51,7 @@ try{
       toast.success(val.message)
     }
 }catch(e:any){
-toast.error(e?.response?.data?.error[0].msg ?? e?.response?.data?.message ?? 'Failed')
+toast.error( e?.response?.data?.error?.[0]?.msg ?? e?.response?.data?.message ?? 'Failed')
 }
   };
 
