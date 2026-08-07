@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface useUserStore{
     detail:{id:string,token:string,name:string},
@@ -25,4 +25,6 @@ export  const useUserDetail = create<useUserStore>()(persist((set)=>({
             name:''
         }
     })
-}),{name:'userDetail'}))
+}),{name:'userDetail',storage:createJSONStorage(()=>sessionStorage)
+
+}))
